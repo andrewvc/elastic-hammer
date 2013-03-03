@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>CodePen - A Pen by andrewvc</title>
+
+  <style>
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#command-bar {
+  display: table;
+  width: 920px;
+}
+#command-bar .labels, #command-bar .fields {
+  width: 920px;
+  display: table-row;
+}
+#command-bar .labels input, #command-bar .labels select, #command-bar .labels label, #command-bar .fields input, #command-bar .fields select, #command-bar .fields label {
+  display: inline-block;
+  padding: 2px 3px;
+  margin: 0px 5px;
+}
+#command-bar .labels #ajax-method, #command-bar .labels #ajax-method-label, #command-bar .fields #ajax-method, #command-bar .fields #ajax-method-label {
+  width: 80px;
+}
+#command-bar .labels #server, #command-bar .labels #server-label, #command-bar .fields #server, #command-bar .fields #server-label {
+  width: 200px;
+}
+#command-bar .labels #path, #command-bar .labels #path-label, #command-bar .fields #path, #command-bar .fields #path-label {
+  width: 500px;
+}
+
+#body, #response {
+  display: inline-block;
+  width: 450px;
+  height: 500px;
+}
+#body textarea, #response textarea {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+#codepen-footer,#codepen-footer *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#codepen-footer{position:fixed;bottom:0;left:0;width:100%;padding:0 10px;height:30px;color:#eeeeee;background-color:#505050;background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #505050), color-stop(100%, #383838));background:-webkit-linear-gradient(#505050,#383838);background:-moz-linear-gradient(#505050,#383838);background:-o-linear-gradient(#505050,#383838);background:linear-gradient(#505050,#383838);border-top:1px solid #000;border-bottom:1px solid #000;box-shadow:inset 0 1px 0 #6e6e6e,0 2px 2px rgba(0,0,0,0.4);font:12px/30px "Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif;line-height:30px}#codepen-footer a{color:#a7a7a7;text-decoration:none}#codepen-footer a:hover{color:white}#footer-right{position:absolute;right:5px;top:0}@media (max-width: 600px){#footer-right{display:none}}#bs-button{padding:1px 6px 2px 19px;background:url(/images/browserstack.png),-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fff4d1), color-stop(100%, #c9b67b));background:url(/images/browserstack.png),-webkit-linear-gradient(#fff4d1,#c9b67b);background:url(/images/browserstack.png),-moz-linear-gradient(#fff4d1,#c9b67b);background:url(/images/browserstack.png),-o-linear-gradient(#fff4d1,#c9b67b);background:url(/images/browserstack.png),linear-gradient(#fff4d1,#c9b67b);background-position:4px center,center center;background-repeat:no-repeat;background-size:12px 12px,cover;border:0;font:11px "Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif;border-radius:5px}#bs-button:hover{background:url(/images/browserstack.png),#fff4d1;background-position:4px center,center center;background-repeat:no-repeat;background-size:12px 12px,cover}
+
+  </style>
+
+</head>
+
+<body>
+
+  <div id='command-bar'>
+  <form id='client'>
+    <div class='labels'>
+      <label for='method' id='ajax-method-label'>Method</label>
+      <label for='server' id='server-label'>Server</label>
+      <label for='Path' id='path-label'>Path</label>
+    </div>
+    <div class='fields'>
+      <select id='ajax-method' name='method'>
+        <option value='GET'>GET</option>
+        <option value='PUT'>PUT</option>
+        <option value='POST'>POST</option>
+        <option value='DELETE'>DELETE</option>
+      </select>
+      <input id='server' name='server' type='text' value='http://localhost:9200' />
+      <input id='path' name='path' type='text' />
+      <input type='submit' />
+    </div>
+    <div id='body'>
+      Body
+      <textarea></textarea>
+    </div>
+    <div id='response'>
+      Response
+      <textarea></textarea>
+    </div>
+  </form>
+</div>
+
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+  <script>
+(function() {
+
+$('#client').on('submit', function (e) {
+  e.preventDefault();
+  var $f = $('#client');
+  var meth = $f.find('#ajax-method').val();
+  var srv = $f.find('#server').val();
+  var path = $f.find('#path').val()
+  var url = srv + '/' + path;
+  $.ajax(url, {type: meth, dataType: 'text'}).
+    success(function (d) {
+      console.log(d);
+      $('#response textarea').text(d);
+    }).error(function (d) {
+      console.error(d);
+      $('#response textarea').text(d);
+    });
+});
+
+})();
+  </script>
+
+</body>
+
+</html>
