@@ -10,7 +10,6 @@ h1 {
 }
 
 header, h1, h2, h3 {
-  text-align: center;
   text-transform: uppercase;
 }
 
@@ -22,12 +21,31 @@ h2 {
   font-family: monospace;
 }
 
+.request-history .request {
+  padding-bottom: 10px;
+  border-bottom: 1px solid silver;
+  margin-bottom: 10px;
+}
+
+.request-history .status.succeeded {
+  color: #00ff00;
+}
+
+.request-history .status.errored {
+  color: red;
+}
+
+.request-history .server {
+  font-size: 10px;
+  margin: 2px 0 4px 0;
+}
+
 header, #content {
   background-color: rgba(255,255,255,0.7);
   margin: 0px auto;
   display: table;
-  width: 920px;
-  padding: 10px 10px;
+  width: 100%;
+  padding: 10px 0px;
   border-bottom: 1px solid #eee;
 }
 
@@ -36,16 +54,25 @@ header, #content {
   width: 100%;
 }
 
+.request-form form textarea {
+  display: none;
+}
+
+.request-form form.method-post textarea, .request-form form.method-put textarea {
+  display: block;
+}
+
+.request-form textarea {
+  width: 100%;
+  height: 80px;
+}
+
 .request-form .fields {
   display: table-row;
 }
 
-.request-form .fields > * {
-  display: table-cell;
-}
-
 .request-form #path {
-  width: 670px;
+  width: 640px;
 }
 
 #command-bar .labels, #command-bar .fields {
@@ -67,7 +94,7 @@ header, #content {
   width: 500px;
 }
 
-#body, #response {
+#body {
   display: block;
   float: left;
   width: 450px;
@@ -83,27 +110,25 @@ header, #content {
   margin-right: 15px;
 }
 
-#response pre {
+textarea.response, textarea.body {
   white-space: pre-wrap;
   margin: 0;
   border: 1px solid silver;
   border-top: 4px solid silver;
+  height: 120px;
+  width: 100%;
+  color: black;
+  overflow: scroll;
 }
-
-#response pre.success {
-  border-color: #00ff00;
-}
-
 
 #response pre.error {
   border-color: red;
 }
 
-#body textarea, #response #output {
+#body textarea {
   font-family: monospace;
   font-size: 14px;
   display: block;
   width: 100%;
-  min-height: 500px;
   background: transparent;
 }

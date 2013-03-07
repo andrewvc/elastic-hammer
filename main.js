@@ -16,31 +16,36 @@ Hammer.Request = Backbone.Model.extend({
     defaults: function () {
         return {state: 'fresh'};
     },
-    exec: function (attrs) {
+    exec: function () {
         if (this.get('state') !== 'fresh') {
             console.error("Already ran!", this.get('state'), this);
             return;
         }
         
-        this.set(attrs);
         this.set('state', 'running');
         console.log("NOW", this.cid, this.attributes);
         var self = this;
+        var m = this.get('method');
+        var body = null;
+        if (m === 'POST' || m === 'PUT') {
+            body = this.get('body');
+        }
         $.ajax(
             this.url(),
             {
                 type: this.get('method'),
-                data: this.get('body')
+                data: body,
+                processData: false
             }
         ).success(
-            function (d) {
-                self.set({state: 'succeeded', response: d});
+            function (d,ts,xhr) {
+                self.set({state: 'succeeded', response: d, status: xhr.status});
                 self.trigger('complete');
                 self.trigger('success');
             }
         ).error(
-            function (d) {
-                self.set({state: 'errored', response: d});
+            function (d,ts,xhr) {
+                self.set({state: 'errored', response: d, status: xhr.status});
                 self.trigger('complete');
                 self.trigger('error');
             }
@@ -66,7 +71,9 @@ Hammer.RequestHistory = Backbone.Collection.extend({
 Hammer.RequestFormView = Backbone.View.extend({
     className: 'request-form',
     events: {
-        keypress: 'keypress'
+        keypress: 'keypress',
+        submit: 'blockSubmit',
+        change: 'change'
     },
     initialize: function () {
         this.tmpl = _.template($('#request-form-tmpl').html());
@@ -80,32 +87,47 @@ Hammer.RequestFormView = Backbone.View.extend({
     render: function () {
         this.$el.html(this.tmpl(this.model.toJSON()));        
     },
+    change: function () {
+        this.readForm();
+        var $f = this.$el.find('form');
+
+        $f.attr('class', 'method-' + this.model.get('method').toLowerCase());
+    },
     updateForm: function () {
         var $f = this.$el.find('form');
-        $f.find('#ajax-method').val(this.get('method'));
-        $f.find('#server').val(this.get('server'));
-        $f.find('#path').val(this.get('path'));
-        $f.find('textarea[name=body]').val(this.get('body'));
+
+        $f.find('#ajax-method').val(this.model.get('method'));
+        $f.find('#server').val(this.model.get('server'));
+        $f.find('#path').val(this.model.get('path'));
+        $f.find('textarea[name=body]').val(this.model.get('body'));
     },
-    exec: function () {
+    readForm: function () {
         var $f = this.$el.find('form');
-        
         var attrs = {
             method: $f.find('#ajax-method').val(),
             server: $f.find('#server').val(),
             path: $f.find('#path').val(),
             body: $f.find('textarea[name=body]').val()
-        };
-        this.model.exec(attrs);
+        };        
+        this.model.set(attrs);
+    },
+    exec: function () {
+        this.readForm();
+        this.model.exec();
+    },
+    blockSubmit: function (e) {
+      e.preventDefault();  
     },
     keypress: function (e) {
-       if (Hammer.Util.isCtrlEnter(e)) {
-          e.preventDefault();
-          this.exec();
-      } else if (e.keyCode === 13) {
-          console.debug("Enter, does nothing");
-          e.preventDefault();
-      }
+       if ($(e.target).attr('name') === 'body') {
+           if (Hammer.Util.isCtrlEnter(e)) {
+               e.preventDefault();
+               this.exec();
+           }
+       } else if (e.keyCode === 13) {
+           e.preventDefault();
+           this.exec();
+       }
     }
 });
 
@@ -145,7 +167,10 @@ Hammer.RequestRouter = Backbone.Router.extend({
         this.reqHistoryView = new Hammer.RequestHistoryView({history: this.history});
         
         this.curReqView = new Hammer.RequestFormView({model: new Hammer.Request});
+
         this.showNew();
+        // why does this not work?
+        this.curReqView.$el.find('#path').focus();
         
         $('#content').append(this.curReqView.el);
         $('#content').append(this.reqHistoryView.el);

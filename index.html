@@ -22,22 +22,38 @@
   </script>
 
   <script type="x-tmpl" id="request-tmpl">
-    <%= method %> <%= server %>/<%=path%>
+    <div class="method-path">
+      <span class='status <%= state %>'><%= (state=='errored') ?  "ERR" : status %></span> <%= method %> /<%=path%>
+    </div>
+    <div class="server">
+      <%= server %>
+    </div>
+    <% if (body) { %>
+      <div class="body">
+        <textarea disabled='true' class='body'><%= body %></textarea>
+      </div>
+    <% } %>
+    <% if (response) { %>
+      <% var stringified = JSON.stringify(response, null, '  '); %>
+      <textarea disabled='true' class="response"><%= stringified %></textarea>
+    <% } %>
   </script>
 
   <script type="x-tmpl" id="request-form-tmpl">
     <form>
       <div class='fields'>
-        <select id='ajax-method' name='method'>
+        <select id='ajax-method' name='method' tabindex="1">
           <option value='GET'>GET</option>
           <option value='PUT'>PUT</option>
           <option value='POST'>POST</option>
           <option value='DELETE'>DELETE</option>
           <option value='HEAD'>HEAD</option>
         </select>
-        <input id='server' placeholder='http://server:port' name='server' type='text' value='http://localhost:9200' />
-        <input id='path' placeholder='/path' name='path' type='text' />
+        <input id='server' placeholder='http://server:port' name='server' type='text' value='http://localhost:9200' tabindex="4" />
+        /
+        <input id='path' placeholder='path' name='path' type='text' tabindex="2"/>
         <input type='submit' value='&#9166;' />
+        <textarea name='body' tabindex='3'></textarea>
       </div>
     </form>
   </script>
@@ -52,65 +68,6 @@
   <section id='content'>
     
   </section>
-  <!--
-  <div id='command-bar'>
-  <form id='client'>
-    <div class='fields'>
-      <select id='ajax-method' name='method'>
-        <option value='GET'>GET</option>
-        <option value='PUT'>PUT</option>
-        <option value='POST'>POST</option>
-        <option value='DELETE'>DELETE</option>
-        <option value='HEAD'>HEAD</option>
-      </select>
-      <input id='server' placeholder='http://server:port' name='server' type='text' value='http://localhost:9200' />
-      <input id='path' placeholder='/path' name='path' type='text' />
-      <input type='submit' value='Go!' />
-    </div>
-
-    <div id='body'>
-      <label for="body">Body</label>
-      <textarea name="body"></textarea>
-    </div>
-    <div id='response'>
-      <label for="response">Response</label>
-      <pre id="output"></textarea>
-    </div>
-
-  </form>
-</div>
-
-
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
-
-  <script>
-(function() {
-
-$('#client').on('submit', function (e) {
-  e.preventDefault();
-  var $f = $('#client');
-  var meth = $f.find('#ajax-method').val();
-  var srv = $f.find('#server').val();
-  var path = $f.find('#path').val()
-  var body = $f.find('textarea[name=body]').val();
-  var url = srv + '/' + path;
-  var output = $('#output');
-  $.ajax(url, {type: meth, data: body}).
-    success(function (d) {
-      console.log(d);
-      output.addClass('success');
-      output.removeClass('error');
-      output.text(JSON.stringify(d, null, '  '));
-    }).error(function (d) {
-      console.error(d);
-      output.removeClass('success');
-      output.addClass('error');
-      output.text(JSON.stringify(d, null, '  '));
-    });
-});
-
-})();
-  -->
   </script>
 
 </body>
