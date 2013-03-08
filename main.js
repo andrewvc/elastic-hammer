@@ -1,5 +1,14 @@
 Hammer = {};
 
+Hammer.templates = {};
+
+Hammer.loadTemplates = function () {
+    $('script[type=x-tmpl]').each(function (i,tmpl) {
+                        console.log("SET", $(tmpl).attr('id'));
+                        Hammer.templates[$(tmpl).attr('id')] = _.template($(tmpl).html());
+                    });
+};
+
 Hammer.Util = {
     isCtrlEnter: function (e) {
         if (e.keyCode !== 13) {
@@ -44,8 +53,8 @@ Hammer.Request = Backbone.Model.extend({
                 self.trigger('success');
             }
         ).error(
-            function (d,ts,xhr) {
-                self.set({state: 'errored', response: d, status: xhr.status});
+            function (xhr) {
+                self.set({state: 'errored', response: xhr.responseText, status: xhr.status});
                 self.trigger('complete');
                 self.trigger('error');
             }
@@ -76,7 +85,7 @@ Hammer.RequestFormView = Backbone.View.extend({
         change: 'change'
     },
     initialize: function () {
-        this.tmpl = _.template($('#request-form-tmpl').html());
+        this.tmpl = Hammer.templates['request-form-tmpl'];
         this.render();
         this.on('change:model',
                 function (newModel) {
@@ -134,10 +143,17 @@ Hammer.RequestFormView = Backbone.View.extend({
 Hammer.RequestView = Backbone.View.extend({
     className: 'request',
     initialize: function () {
-        this.tmpl = _.template($('#request-tmpl').html());
+        this.tmpl = Hammer.templates['request-tmpl'];
     },
     render: function () {
         this.$el.html(this.tmpl(this.model.toJSON()));
+    },
+    adjustSize: function () {
+        this.$el.find('textarea').each(function (i,ta) {
+           console.log(ta,i,ta.scrollHeight);
+           var rows = Math.ceil(ta.scrollHeight / 13);
+           $(ta).attr('rows', (rows > 20 ? 20 : rows));
+        });
     }
 });
 
@@ -145,7 +161,7 @@ Hammer.RequestHistoryView = Backbone.View.extend({
     tagName: 'section',
     className: 'request-history',
     initialize: function (opts) {
-        this.tmpl = _.template($('#request-history-tmpl').html());
+        this.tmpl = Hammer.templates['request-history-tmpl'];
         this.history = opts.history;
         this.render();
         
@@ -158,6 +174,7 @@ Hammer.RequestHistoryView = Backbone.View.extend({
         var requestView = new Hammer.RequestView({model: request});
         requestView.render();
         $('.requests',this.$el).prepend(requestView.el);
+        requestView.adjustSize();
     }
 });
 
@@ -185,6 +202,7 @@ Hammer.RequestRouter = Backbone.Router.extend({
 });
 
 $(function () {
+      Hammer.loadTemplates();
       window.hammerRouter = new Hammer.RequestRouter;
       Backbone.history.start();
 });

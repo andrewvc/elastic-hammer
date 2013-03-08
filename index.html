@@ -23,7 +23,7 @@
 
   <script type="x-tmpl" id="request-tmpl">
     <div class="method-path">
-      <span class='status <%= state %>'><%= (state=='errored') ?  "ERR" : status %></span> <%= method %> /<%=path%>
+      <span class='status <%= state %>'><%= status %></span> <%= method %> /<%=path%>
     </div>
     <div class="server">
       <%= server %>
