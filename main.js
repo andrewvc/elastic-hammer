@@ -82,7 +82,8 @@ Hammer.RequestFormView = Backbone.View.extend({
     events: {
         keypress: 'keypress',
         submit: 'blockSubmit',
-        change: 'change'
+        change: 'change',
+        "click input[type=submit]": "exec"
     },
     initialize: function () {
         this.tmpl = Hammer.templates['request-form-tmpl'];
