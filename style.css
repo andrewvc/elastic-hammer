@@ -62,10 +62,6 @@ textarea {
   line-height: 13px;
 }
 
-.request-form form textarea {
-  display: none;
-}
-
 .request-form form.method-post textarea, .request-form form.method-put textarea {
   display: block;
 }
@@ -80,8 +76,9 @@ textarea {
 }
 
 .request-form #path {
-  width: 640px;
+  min-width: 300px;
 }
+
 
 #command-bar .labels, #command-bar .fields {
   width: 920px;
@@ -138,4 +135,8 @@ textarea.response, textarea.body {
   display: block;
   width: 100%;
   background: transparent;
+}
+
+#submit-req {
+  width: 100%;
 }

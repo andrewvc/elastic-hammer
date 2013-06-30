@@ -9,67 +9,38 @@
 
   <link type='text/css' rel='stylesheet' style type='text/css' href="style.css"></link>
   <script type='text/javascript' src='jquery.js'></script>
-  <script type='text/javascript' src='underscore.js'></script>
-  <script type='text/javascript' src='backbone.js'></script>
+  <script type='text/javascript' src='knockback.js'></script>
   <script type='text/javascript' src="json2.js"></script>
-  <script type='text/javascript' src='jquery.jstree.js'></script>
   <script type='text/javascript' src='main.js'></script>
+</head>
+<body>
+  <header>
+    <h1>elastic-hammer</h1>
+    <span class="subhead">: an elasticsearch query tool<span>
+  </header>
 
-  <script type="x-tmpl" id="request-history-tmpl">
-    <h2>Request History</h2>
-    <div class='requests'>
-      <%= content %>
-    </div>
-  </script>
-
-  <script type="x-tmpl" id="request-tmpl">
-    <div class="method-path">
-      <span class='status <%= state %>'><%= status %></span> <%= method %> /<%=path%>
-    </div>
-    <div class="server">
-      <%= server %>
-    </div>
-    <% if (body) { %>
-      <div class="body">
-        <textarea disabled='true' class='body'><%= body %></textarea>
-      </div>
-    <% } %>
-    <% if (response) { %>
-      <% var stringified = JSON.stringify(response, null, '  '); %>
-      <textarea disabled='true' class="response"><%= stringified %></textarea>
-    <% } %>
-  </script>
-
-  <script type="x-tmpl" id="request-form-tmpl">
-    <form>
+  <section id="current-request" class="request-form">
+    <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
       <div class='fields'>
-        <select id='ajax-method' name='method'>
+        <select class='method' name='method' data-bind="value: method">
           <option value='GET'>GET</option>
           <option value='PUT'>PUT</option>
           <option value='POST'>POST</option>
           <option value='DELETE'>DELETE</option>
           <option value='HEAD'>HEAD</option>
         </select>
-        <input id='server' placeholder='http://server:port' name='server' type='text' value='http://localhost:9200' />
+        <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
         /
-        <input id='path' placeholder='path' name='path' type='text'/>
-        <input type='submit' value='&#9166;' />
-        <textarea name='body' ></textarea>
-      </div>
-    </form>
-  </script>
-</head>
+        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path" />
+        
+        <div class="body-cont" data-bind="if: bodyCapable">
+          <textarea name='body' class="body" data-bind="value: body"></textarea>
+        </div>
 
-<body>
-  <header>
-    <h1>elastic-hammer</h1>
-    <span class="subhead">: an elasticsearch query tool<span>
-  </header>
-  
-  <section id='content'>
-    
+      </div>
+      <input type='submit' id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
+    </form>
   </section>
-  </script>
 
 </body>
 
