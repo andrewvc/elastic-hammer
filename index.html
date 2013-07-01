@@ -54,13 +54,13 @@
         <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
       </div>
       <div class='body-cont' data-bind="if: body">
-        <div class="body-label"><span class="arrow">⇥</span> Req.</div>
+        <div class="body-label"><span class="arrow">⇥ body</span></div>
         <div class="body">
           <textarea disabled='true' class='body' data-bind="text: body, autoTextArea: body"></textarea>
         </div>
       </div>
       <div class='response-cont' data-bind="if: response">
-        <div class="response-label"><span class="arrow">⇤</span> Resp.</div>
+        <div class="response-label"><span class="arrow">⇤ resp</span></div>
         <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
       </div>
 

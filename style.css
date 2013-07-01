@@ -132,11 +132,29 @@ textarea.body {
 }
 
 .response-cont .response-label, .body-cont .body-label {
-  font-size: 12px;
+  font-size: 11px;
   position: absolute;
   top: 1px;
-  right: 15px;
-  padding: 1px 1px 1px 5px;
+  left: 48%;
+  padding: 1px 4px 1px 3px;
+  opacity: 0.8;
+}
+
+.response-cont textarea.response {
+  border-color: rgb(71, 36, 255);
+}
+
+.response-label {
+  background: rgb(71, 36, 255);
+  color: #fafafa;
+}
+
+.body-cont textarea.body {
+  border-color: rgba(180,180,180,1);
+}
+
+.body-label {
+  background: rgba(180,180,180,1);
 }
 
 .arrow {
@@ -147,14 +165,6 @@ textarea.body {
   font-weight: bold;
 }
 
-.response-label {
-  background: #444;
-  color: #fafafa;
-}
-
-.body-label {
-  background: rgba(180,180,180,1);
-}
 
 #body {
   margin-right: 15px;
