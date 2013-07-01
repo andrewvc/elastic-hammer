@@ -33,7 +33,6 @@
         <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
         /
         <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {keyup: updatePath, paste: updatePath}" />
-        <span class="api" data-bind="text: api"></span>
         </div>
         
         <div class="body-cont" data-bind="if: bodyCapable">
@@ -42,7 +41,7 @@
         </div>
 
       </div>
-      <input type='submit' id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
+      <input type='submit' data-bind="value: apiSubmit" id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
     </form>
   </section>
 

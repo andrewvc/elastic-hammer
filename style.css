@@ -170,7 +170,7 @@ textarea.response, textarea.body {
 }
 
 .api {
-  background-color: rgb(255, 147, 255);
+  background-color:   background-color: #f8f8f8;
   text-transform: uppercase;
   padding: 1px 2px;
 }

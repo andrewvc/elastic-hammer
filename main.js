@@ -7,7 +7,6 @@ Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height);
   var height = (ta.scrollHeight);
   var capped = (height > 200) ? 200 : height;
-  console.log("Capped", capped);
   ta.style.height = capped + 'px';
 
   // Chrome adds an extra 4px. This fixes that bug
@@ -45,7 +44,7 @@ Hammer.Request = Backbone.Model.extend({
     if (a === 'search') {
       newVals.method = 'POST';
       if (! this.get('body')) {
-        newVals.body = '{"query": {}}'
+        newVals.body = '{"query": {"match_all": {}}}'
       }
     } else if (a === 'bulk') {
       newVals.method = 'POST';
@@ -81,7 +80,7 @@ Hammer.Request = Backbone.Model.extend({
       return "document";
     }
     
-    return "unknown";
+    return null;
   },
   validate: function () {
     if  (!this.bodyCapable()) {
@@ -218,6 +217,15 @@ Hammer.RequestBaseVM = function (request) {
     return this.path().substr(0,0) + request.api();
   }, this);
 
+  this.apiSubmit = ko.computed(function () {
+    var type = (this.path().substr(0,0) + request.api());
+    if (type === 'null') 
+      type = '';
+    else 
+      type = ' ' + type.toUpperCase() + '';
+    return 'Execute ' + this.method() + type.toUpperCase() + $('<span> (&#9166; or CTRL+&#9166;)</span>').text();
+  }, this);
+
   this.updatePath = function (vm, e) {
     request.set('path', $(e.currentTarget).val());
     request.apiGuessSettings();
@@ -246,7 +254,7 @@ Hammer.CurrentRequestVM = function (request) {
 
   this.checkCtrlEnter = function (self,e) {
     if (e.keyCode == 13 && e.ctrlKey) {
-      this.execRecord();
+      request.execRecord();
       return false;
     }
     return true
