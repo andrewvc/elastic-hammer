@@ -101,8 +101,8 @@ Hammer.Request = Backbone.Model.extend({
     this.set('errors', null);
     return true;
   },
-  url: function () {
-    return this.get('method') + '/' + this.get('path');
+  reqUrl: function () {
+    return this.get('server') + '/' + this.get('path');
   },
   // Return statuses rounded down to the nearest 100. i.e. 201 -> 200
   statusGroup: function () {
@@ -127,8 +127,10 @@ Hammer.Request = Backbone.Model.extend({
     
     this.set('started', Date.now());
     
+    var reqUrl = this.reqUrl();
+    console.log("TARGET", reqUrl);
     $.ajax(
-      this.url(),
+      reqUrl,
       {
         type: this.get('method'),
         data: body,
@@ -183,8 +185,8 @@ Hammer.RequestHistory = Backbone.Collection.extend({
     var adder = null;
     adder = function () {
       this.add(request);
-      request.save();
-      request.off('complete', adder);
+      var res = this.sync("create", request);
+      //request.off('complete', adder);
     };
     request.on('complete', adder, this);
   },
@@ -238,7 +240,7 @@ Hammer.RequestBaseVM = function (request) {
   }
 
   this.url = ko.computed(function (self) {
-    return request.url();
+    return request.reqUrl();
   });
 
   this.autoTextArea = function (vm, e) {
