@@ -4,9 +4,16 @@ Hammer = {
 };
 
 Hammer.Util.autoTextArea = function (ta) {
+  var oldh = parseInt(ta.style.height);
   var height = (ta.scrollHeight);
   var capped = (height > 200) ? 200 : height;
+  console.log("Capped", capped);
   ta.style.height = capped + 'px';
+
+  // Chrome adds an extra 4px. This fixes that bug
+  if (parseInt(ta.style.height) - oldh < 6) {
+    ta.style.height = oldh + 'px';
+  }
 };
 
 Hammer.Request = Backbone.Model.extend({
@@ -78,7 +85,6 @@ Hammer.Request = Backbone.Model.extend({
   },
   validate: function () {
     if  (!this.bodyCapable()) {
-      console.log("NIL BODY");
       this.set('body', null);
     }
       
@@ -215,7 +221,6 @@ Hammer.RequestBaseVM = function (request) {
   this.updatePath = function (vm, e) {
     request.set('path', $(e.currentTarget).val());
     request.apiGuessSettings();
-    console.log(request.get('path'));
     return true;
   }
 

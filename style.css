@@ -25,6 +25,7 @@ section {
 }
 
 #request-history {
+  border-top: 10px solid #666;
   font-family: monospace;
   margin: 0px 30px;
 }
@@ -120,6 +121,10 @@ textarea {
 .response-cont, .body-cont {
   position: relative;
   clear: both;
+}
+
+textarea.body {
+  background-color: #f8f8f8;
 }
 
 .historical-req .url {
