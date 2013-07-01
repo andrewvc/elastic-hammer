@@ -10,6 +10,7 @@
   <link type='text/css' rel='stylesheet' style type='text/css' href="style.css"></link>
   <script type='text/javascript' src='jquery.js'></script>
   <script type='text/javascript' src='knockback.js'></script>
+  <script type="text/javascript" src="backbone.localStorage.js"></script>
   <script type='text/javascript' src="json2.js"></script>
   <script type='text/javascript' src='main.js'></script>
 </head>
@@ -40,6 +41,25 @@
       </div>
       <input type='submit' id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
     </form>
+  </section>
+
+  <h2>Previous Requests</h2>
+  <section id="request-history" data-bind="foreach: requests">
+    <div class="historical-req">
+      <div class="method-path">
+        <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span> ⇥
+        <span class="url" data-bind="text: url"></span>
+      </div>
+      <div class='body-cont' data-bind="if: body">
+        <div class="body">
+          <textarea disabled='true' class='body' data-bind="text: body"></textarea>
+        </div>
+      </div>
+      <div class='response-cont' data-bind="if: response">
+        <textarea disabled='true' class="response" data-bind="text: responseFmt"></textarea>
+      </div>
+
+    </div>
   </section>
 
 </body>

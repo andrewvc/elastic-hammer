@@ -17,6 +17,11 @@ h2 {
   font-size: 14px;
 }
 
+section {
+  background-color: rgba(255,255,255,0.95);
+  padding: 8px 5px;
+}
+
 .request-history .requests {
   font-family: monospace;
 }
@@ -125,8 +130,29 @@ textarea.response, textarea.body {
   overflow: scroll;
 }
 
-#response pre.error {
-  border-color: red;
+.status {
+  font-weight: bold;
+}
+
+[data-status-group="errored"]:before {
+  color: red;
+  content: "CONN ERR ";
+}
+
+[data-status-group="500"] {
+  color: red;
+}
+
+[data-status-group="400"] {
+  color: orangered;
+}
+
+[data-status-group="300"] {
+  color: purple;
+}
+
+[data-status-group="200"] {
+  color: #0D0;
 }
 
 #body textarea {
