@@ -134,7 +134,7 @@ textarea.body {
 .response-cont .response-label, .body-cont .body-label {
   font-size: 12px;
   position: absolute;
-  top: 0px;
+  top: 1px;
   right: 15px;
   padding: 1px 1px 1px 5px;
 }
@@ -148,7 +148,8 @@ textarea.body {
 }
 
 .response-label {
-  background: rgba(192, 255, 250, 1);
+  background: #444;
+  color: #fafafa;
 }
 
 .body-label {

@@ -214,7 +214,12 @@ Hammer.RequestBaseVM = function (request) {
   this.api = ko.computed(function () {
     // For some reason peek() seems to get optimized out, and 
     // this never triggers unless we actually use the path() with IO
-    return this.path().substr(0,0) + request.api();
+    var apiStr = request.api();
+    if (apiStr) {
+      return this.path().substr(0,0) + request.api();
+    } else {
+      return '';
+    }
   }, this);
 
   this.apiSubmit = ko.computed(function () {
@@ -265,7 +270,23 @@ Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
 
   this.responseFmt = ko.computed(function() {
-    return JSON.stringify(this.response(), null, 2);
+    var respJSON;
+    var respStr;
+    if (_.isString(this.response())) {
+      try {
+        respJSON = JSON.parse(this.response())
+      } catch (ex) {
+        respStr = this.response();
+      }
+    } else {
+      respJSON = this.response();
+    }
+    
+    if (respJSON) {
+      return JSON.stringify(respJSON, null, 2);
+    } else {
+      return respStr;
+    }
   }, this);
 
   this.statusGroup = ko.computed(function () {
