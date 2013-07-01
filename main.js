@@ -1,5 +1,12 @@
 Hammer = {
-  Data: {}
+  Data: {},
+  Util: {}
+};
+
+Hammer.Util.autoTextArea = function (ta) {
+  var height = (ta.scrollHeight);
+  var capped = (height > 200) ? 200 : height;
+  ta.style.height = capped + 'px';
 };
 
 Hammer.Request = Backbone.Model.extend({
@@ -13,8 +20,81 @@ Hammer.Request = Backbone.Model.extend({
       path: '',
       body: null,
       response: null,
-      status: null
+      status: null,
+      errors: ""
     };
+  },
+  initialize: function () {
+    this.on('change', this.validate, this);
+  },
+  bodyCapable: function () {
+    var method = this.get('method');
+    return (method === 'PUT' || method === 'POST');
+  },
+  // Attempt to guess helpful API settings as paths are typed
+  apiGuessSettings: function () {
+    var a = this.api();
+    var newVals = {};
+    if (a === 'search') {
+      newVals.method = 'POST';
+      if (! this.get('body')) {
+        newVals.body = '{"query": {}}'
+      }
+    } else if (a === 'bulk') {
+      newVals.method = 'POST';
+      if (! this.get('body')) {
+        newVals.body = '{"index": {"_index": "INDEXNAME", "_type": "TYPENAME", "_id": "ID"}}\n{"field1": "value"}\n'
+      }
+    }
+
+    this.set(newVals);
+  },
+  api: function () {
+    var noquery = this.get('path').replace(/\?.*/, '');
+    var parts = noquery.split("/");
+    if (parts[0] == "") {
+      parts = parts.slice(1); // Discard leading '/' part
+    }
+
+    var last = _.last(parts);
+    
+    switch (last)
+    {
+    case '_search':
+      return 'search';
+    case '_mapping':
+      return 'mapping';
+    case '_settings':
+      return '_settings';
+    case '_bulk':
+      return 'bulk';
+    };
+    
+    if (parts.length === 3 && last.match(/^[^_].+$/)) {
+      return "document";
+    }
+    
+    return "unknown";
+  },
+  validate: function () {
+    if  (!this.bodyCapable()) {
+      console.log("NIL BODY");
+      this.set('body', null);
+    }
+      
+    var body = this.get('body');
+    var method = this.get('method');
+    if (this.bodyCapable() && body !== undefined && body !== null && body.trim() !== '' && this.api() !== 'bulk') {
+      try {
+        JSON.parse(body);
+      } catch (ex) {
+        this.set('errors', "Invalid JSON: " + ex);
+        return false;
+      }
+    }
+    
+    this.set('errors', null);
+    return true;
   },
   url: function () {
     return this.get('method') + '/' + this.get('path');
@@ -33,7 +113,6 @@ Hammer.Request = Backbone.Model.extend({
     }
     
     this.set('state', 'running');
-    console.log("NOW", this.cid, this.attributes);
     var self = this;
     var m = this.get('method');
     var body = null;
@@ -109,6 +188,12 @@ Hammer.RequestHistory = Backbone.Collection.extend({
   }
 });
 
+ko.bindingHandlers.autoTextArea = {
+  update: function(ta, valueAccessor, allBindingsAccessor) {
+    Hammer.Util.autoTextArea(ta);
+  }
+};
+
 Hammer.RequestBaseVM = function (request) {
   _.extend(this, kb.viewModel(request));
   this.exec = function (self) {
@@ -121,9 +206,34 @@ Hammer.RequestBaseVM = function (request) {
     return (m === 'POST' || m === 'PUT')
   }, this);
 
+  this.api = ko.computed(function () {
+    // For some reason peek() seems to get optimized out, and 
+    // this never triggers unless we actually use the path() with IO
+    return this.path().substr(0,0) + request.api();
+  }, this);
+
+  this.updatePath = function (vm, e) {
+    request.set('path', $(e.currentTarget).val());
+    request.apiGuessSettings();
+    console.log(request.get('path'));
+    return true;
+  }
+
   this.url = ko.computed(function (self) {
     return request.url();
   });
+
+  this.autoTextArea = function (vm, e) {
+    Hammer.Util.autoTextArea(e.currentTarget);
+    return true;
+  };
+
+  this.vAutoTextArea = function (vm, e) {
+    request.set('body', $(e.currentTarget).val());
+    request.validate();
+    Hammer.Util.autoTextArea(e.currentTarget);
+    return true;
+  };
 };
 
 Hammer.CurrentRequestVM = function (request) {
@@ -135,14 +245,14 @@ Hammer.CurrentRequestVM = function (request) {
       return false;
     }
     return true
-  }
+  };
 };
 
 Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
 
   this.responseFmt = ko.computed(function() {
-    return JSON.stringify(this.response());
+    return JSON.stringify(this.response(), null, 2);
   }, this);
 
   this.statusGroup = ko.computed(function () {

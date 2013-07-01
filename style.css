@@ -1,7 +1,8 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  background-image: url('diagonales_decalees.png');
+  background-image: url('cream_pixels_@2x.png');
+  background-size: 160px 160px;
 }
 
 h1 {
@@ -10,6 +11,7 @@ h1 {
 }
 
 header, h1, h2, h3 {
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -19,32 +21,21 @@ h2 {
 
 section {
   background-color: rgba(255,255,255,0.95);
-  padding: 8px 5px;
+  padding: 10px 5px;
 }
 
-.request-history .requests {
+#request-history {
   font-family: monospace;
+  margin: 0px 30px;
 }
 
-.request-history .request {
+#request-history .request {
   padding-bottom: 10px;
-  border-bottom: 1px solid silver;
+  border-bottom: 5px solid silver;
   margin-bottom: 10px;
 }
 
-.request-history .status {
-  font-weight: bold;
-}
-
-.request-history .status.succeeded {
-  color: #00ff00;
-}
-
-.request-history .status.errored {
-  color: red;
-}
-
-.request-history .server {
+#request-history .server {
   font-size: 10px;
   margin: 2px 0 4px 0;
 }
@@ -71,9 +62,15 @@ textarea {
   display: block;
 }
 
+.request-form .errors {
+  font-weight: bold;
+  background-color: #fee;
+  margin: 5px 0;
+}
+
 .request-form textarea {
   width: 100%;
-  height: 80px;
+  min-height: 80px;
 }
 
 .request-form .fields {
@@ -81,7 +78,11 @@ textarea {
 }
 
 .request-form #path {
+  display: table-cell;
   min-width: 300px;
+}
+#method, #server {
+  display: table-cell;
 }
 
 
@@ -116,6 +117,39 @@ textarea {
   font-variant: small-caps;
 }
 
+.response-cont, .body-cont {
+  position: relative;
+  clear: both;
+}
+
+.historical-req .url {
+  font-size: 12px;
+}
+
+.response-cont .response-label, .body-cont .body-label {
+  font-size: 12px;
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  padding: 1px 1px 1px 5px;
+}
+
+.arrow {
+  font-weight: bold;
+}
+
+.historical-req .method {
+  font-weight: bold;
+}
+
+.response-label {
+  background: rgba(192, 255, 250, 1);
+}
+
+.body-label {
+  background: rgba(180,180,180,1);
+}
+
 #body {
   margin-right: 15px;
 }
@@ -124,14 +158,21 @@ textarea.response, textarea.body {
   white-space: pre-wrap;
   margin: 0;
   border: 1px solid silver;
-  border-top: 4px solid silver;
+  border-top: 1px solid silver;
   width: 100%;
   color: black;
-  overflow: scroll;
+  overflow: auto;
+}
+
+.api {
+  background-color: rgb(255, 147, 255);
+  text-transform: uppercase;
+  padding: 1px 2px;
 }
 
 .status {
   font-weight: bold;
+  float: right;
 }
 
 [data-status-group="errored"]:before {
@@ -155,7 +196,11 @@ textarea.response, textarea.body {
   color: #0D0;
 }
 
-#body textarea {
+.method-path {
+  padding-bottom: 4px;
+}
+
+textarea {
   font-family: monospace;
   font-size: 14px;
   display: block;

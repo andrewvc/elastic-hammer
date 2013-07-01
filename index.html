@@ -17,13 +17,13 @@
 <body>
   <header>
     <h1>elastic-hammer</h1>
-    <span class="subhead">: an elasticsearch query tool<span>
+    <span class="subhead">: elasticsearch query tool<span>
   </header>
 
   <section id="current-request" class="request-form">
     <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
       <div class='fields'>
-        <select class='method' name='method' data-bind="value: method">
+        <select id="method" class='method' name='method' data-bind="value: method">
           <option value='GET'>GET</option>
           <option value='PUT'>PUT</option>
           <option value='POST'>POST</option>
@@ -32,10 +32,13 @@
         </select>
         <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
         /
-        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path" />
+        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {keyup: updatePath, paste: updatePath}" />
+        <span class="api" data-bind="text: api"></span>
+        </div>
         
         <div class="body-cont" data-bind="if: bodyCapable">
-          <textarea name='body' class="body" data-bind="value: body"></textarea>
+          <div class="errors" data-bind="text: errors"></div>
+          <textarea name='body' class="body" data-bind="value: body, autoTextArea: body, event: {keyup: vAutoTextArea, paste: vAutoTextArea}"></textarea>
         </div>
 
       </div>
@@ -45,18 +48,22 @@
 
   <h2>Previous Requests</h2>
   <section id="request-history" data-bind="foreach: requests">
-    <div class="historical-req">
+    <div class="historical-req request">
       <div class="method-path">
-        <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span> ⇥
+        <span class="api" data-bind="text: api"></span>
+        <span class="method" data-bind="text: method"></span>
         <span class="url" data-bind="text: url"></span>
+        <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
       </div>
       <div class='body-cont' data-bind="if: body">
+        <div class="body-label"><span class="arrow">⇥</span> Req.</div>
         <div class="body">
-          <textarea disabled='true' class='body' data-bind="text: body"></textarea>
+          <textarea disabled='true' class='body' data-bind="text: body, autoTextArea: body"></textarea>
         </div>
       </div>
       <div class='response-cont' data-bind="if: response">
-        <textarea disabled='true' class="response" data-bind="text: responseFmt"></textarea>
+        <div class="response-label"><span class="arrow">⇤</span> Resp.</div>
+        <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
       </div>
 
     </div>
