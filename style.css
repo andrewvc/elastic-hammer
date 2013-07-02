@@ -196,6 +196,10 @@ textarea.response, textarea.body {
   margin-right: 10px;
 }
 
+.run-again:hover {
+  color: gray;
+}
+
 [data-status-group="errored"]:before {
   color: red;
   content: "CONN ERR ";
