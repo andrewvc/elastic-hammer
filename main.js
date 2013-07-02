@@ -271,6 +271,16 @@ Hammer.CurrentRequestVM = function (request) {
 Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
 
+  this.runAgain = function () {
+    Hammer.Data.current.set({
+      method: request.get('method'),
+      server: request.get('server'),
+      path: request.get('path'),
+      body: request.get('body')
+    });
+    window.scrollTo(0,0);
+  };
+
   this.responseFmt = ko.computed(function() {
     var respJSON;
     var respStr;

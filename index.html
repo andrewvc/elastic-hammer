@@ -51,7 +51,8 @@
         <span class="api" data-bind="text: api"></span>
         <span class="method" data-bind="text: method"></span>
         <span class="url" data-bind="text: url"></span>
-        <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
+        <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>&nbsp;
+        <span class='run-again' data-bind="event: {click: runAgain}">Re-Run </span>
       </div>
       <div class='body-cont' data-bind="if: body">
         <div class="body-label"><span class="arrow">⇥ body</span></div>

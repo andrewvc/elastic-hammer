@@ -186,9 +186,14 @@ textarea.response, textarea.body {
   padding: 1px 2px;
 }
 
-.status {
+.status, .run-again {
   font-weight: bold;
   float: right;
+}
+
+.run-again {
+  cursor: pointer;
+  margin-right: 10px;
 }
 
 [data-status-group="errored"]:before {
