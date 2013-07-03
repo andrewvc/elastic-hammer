@@ -60,6 +60,9 @@
           <textarea disabled='true' class='body' data-bind="text: body, autoTextArea: body"></textarea>
         </div>
       </div>
+      <!-- ko if: formattableResponse -->
+      <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
+      <!-- /ko -->
       <div class='response-cont' data-bind="if: response">
         <div class="response-label"><span class="arrow">⇤ resp</span></div>
         <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
@@ -67,6 +70,21 @@
 
     </div>
   </section>
+
+  <script id="formattedResponseTmpl" type="text/html">
+    <!-- ko ifnot: isObject -->
+      <div class="fmt-node" data-bind="attr: {'data-is-arr-val': isArrVal}">
+        <!-- ko ifnot: isArrVal -->
+        <span class="fmt-node-name" data-bind="text: name"></span>:
+        <span class="fmt-node-value" data-bind="text: value"></span>
+      <!-- /ko -->
+      </div>
+
+    <!-- /ko -->
+    <!-- ko if: isObject -->
+      <div class='fmt-nodes' data-bind="template: {name: 'formattedResponseTmpl', foreach: value}"></div>    
+    <!-- /ko -->
+  </script>
 
 </body>
 

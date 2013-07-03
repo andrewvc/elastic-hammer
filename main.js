@@ -20,7 +20,7 @@ Hammer.Request = Backbone.Model.extend({
     return {
       started: null,
       ended: null,
-      state: 'fresh', 
+      state: 'fresh',
       method: 'GET',
       server: 'http://localhost:9200',
       path: '',
@@ -63,7 +63,7 @@ Hammer.Request = Backbone.Model.extend({
     }
 
     var last = _.last(parts);
-    
+
     switch (last)
     {
     case '_search':
@@ -75,18 +75,18 @@ Hammer.Request = Backbone.Model.extend({
     case '_bulk':
       return 'bulk';
     };
-    
+
     if (parts.length === 3 && last.match(/^[^_].+$/)) {
       return "document";
     }
-    
+
     return null;
   },
   validate: function () {
     if  (!this.bodyCapable()) {
       this.set('body', null);
     }
-      
+
     var body = this.get('body');
     var method = this.get('method');
     if (this.bodyCapable() && body !== undefined && body !== null && body.trim() !== '' && this.api() !== 'bulk') {
@@ -97,7 +97,7 @@ Hammer.Request = Backbone.Model.extend({
         return false;
       }
     }
-    
+
     this.set('errors', null);
     return true;
   },
@@ -116,7 +116,7 @@ Hammer.Request = Backbone.Model.extend({
       console.error("Already ran!", this.get('state'), this);
       return;
     }
-    
+
     this.set('state', 'running');
     var self = this;
     var m = this.get('method');
@@ -124,9 +124,9 @@ Hammer.Request = Backbone.Model.extend({
     if (m === 'POST' || m === 'PUT') {
       body = this.get('body');
     }
-    
+
     this.set('started', Date.now());
-    
+
     var reqUrl = this.reqUrl();
     console.log("TARGET", reqUrl);
     $.ajax(
@@ -151,7 +151,7 @@ Hammer.Request = Backbone.Model.extend({
       function (xhr) {
         self.set('ended', Date.now());
     });
-    
+
   },
   execRecord: function () {
     var eClone = this.clone();
@@ -206,7 +206,7 @@ Hammer.RequestBaseVM = function (request) {
   this.exec = function (self) {
     request.execRecord();
   };
-  
+
   var self = this;
   this.bodyCapable = ko.computed(function () {
     var m = this.method();
@@ -214,7 +214,7 @@ Hammer.RequestBaseVM = function (request) {
   }, this);
 
   this.api = ko.computed(function () {
-    // For some reason peek() seems to get optimized out, and 
+    // For some reason peek() seems to get optimized out, and
     // this never triggers unless we actually use the path() with IO
     var apiStr = request.api();
     if (apiStr) {
@@ -226,9 +226,9 @@ Hammer.RequestBaseVM = function (request) {
 
   this.apiSubmit = ko.computed(function () {
     var type = (this.path().substr(0,0) + request.api());
-    if (type === 'null') 
+    if (type === 'null')
       type = '';
-    else 
+    else
       type = ' ' + type.toUpperCase() + '';
     return 'Execute ' + this.method() + type.toUpperCase() + $('<span> (&#9166; or CTRL+&#9166;)</span>').text();
   }, this);
@@ -281,7 +281,7 @@ Hammer.HistoricalRequestVM = function (request) {
     window.scrollTo(0,0);
   };
 
-  this.responseFmt = ko.computed(function() {
+  this.responseFmt = ko.computed(function () {
     var respJSON;
     var respStr;
     if (_.isString(this.response())) {
@@ -293,12 +293,31 @@ Hammer.HistoricalRequestVM = function (request) {
     } else {
       respJSON = this.response();
     }
-    
+
     if (respJSON) {
       return JSON.stringify(respJSON, null, 2);
     } else {
       return respStr;
     }
+  }, this);
+
+  var templateifyObject;
+  templateifyObject = function (value, name) {
+    if (_.isArray(value)) {
+      return {name: name, isObject: true, value: _.map(value, function (v) { return templateifyObject(v, "___eharr___") })};
+    } else if (_.isObject(value)) {
+      return {name: name, value: _.map(value, templateifyObject), isObject: true};
+    } else {
+      return {name: name, value: value, isObject: false, isArrVal: (name === "___eharr___")};
+    }
+  };
+
+  this.responseNodes = ko.computed(function () {
+    return _.map(this.response(), templateifyObject);
+  }, this);
+
+  this.formattableResponse = ko.computed(function () {
+    return this.api() === 'search';
   }, this);
 
   this.statusGroup = ko.computed(function () {
@@ -315,11 +334,11 @@ Hammer.HistoricalRequestsVM = function (requests) {
 $(function () {
   Hammer.Data.history = new Hammer.RequestHistory();
   Hammer.Data.current = new Hammer.Request();
-  
+
   // The Current Request
   var curReqVM = new Hammer.CurrentRequestVM(Hammer.Data.current);
   ko.applyBindings(curReqVM, $('#current-request')[0]);
-  
+
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);
   ko.applyBindings(histReqsVM, $('#request-history')[0]);

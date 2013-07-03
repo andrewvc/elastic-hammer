@@ -236,3 +236,23 @@ textarea {
 #submit-req {
   width: 100%;
 }
+
+.fmt-nodes-top {
+  font-size: 12px;
+}
+
+.fmt-node:hover {
+  background-color: rgb(255,255,0);
+}
+
+.fmt-nodes {
+  padding-left: 10px;
+}
+
+.fmt-node-name {
+  color: #444;
+}
+
+.fmt-node-value {
+  font-weight: bold;
+}
