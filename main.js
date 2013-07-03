@@ -76,7 +76,7 @@ Hammer.Request = Backbone.Model.extend({
       return 'bulk';
     };
 
-    if (parts.length === 3 && last.match(/^[^_].+$/)) {
+    if (parts.length === 3 && last.match(/^[^_].*$/)) {
       return "document";
     }
 
@@ -335,7 +335,7 @@ Hammer.HistoricalRequestVM = function (request) {
   }, this);
 
   this.formattableResponse = ko.computed(function () {
-    return this.api() === 'search';
+    return (this.api() === 'search') || (this.api() === "document" && this.method() === 'GET');
   }, this);
 
   this.statusGroup = ko.computed(function () {
