@@ -12,7 +12,7 @@ A web front-end for elasticsearch. Runs directly in the browser using localstora
 * Cross Platform
 * Uses HTML5 localstorage to keep your request history
 
-![Screenshot](https://www.evernote.com/shard/s46/sh/1876aa18-4b49-414f-83e7-1b1b18c40802/b1ad9d9b4df9ed05748818eb5fa17548/deep/0/Elastic-Hammer.png)
+![Screenshot](https://www.evernote.com/shard/s46/sh/691eda2f-ef89-4578-8a8a-eb73efd439c4/4efdcec6693f6bc84b47913bdf47d046/deep/0/Elastic-Hammer.png)
 
 ## In Development
 
