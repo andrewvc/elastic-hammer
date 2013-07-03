@@ -16,8 +16,10 @@
 </head>
 <body>
   <header>
-    <h1>elastic-hammer</h1>
-    <span class="subhead">: elasticsearch query tool<span>
+    <span class='hammerpick'>&#9874;</span><h1>elastic hammer</h1>
+    <div class="gh-link">
+      [ <a href="https://github.com/andrewvc/elastic-hammer">github</a> ]
+    </div>
   </header>
 
   <section id="current-request" class="request-form">
@@ -47,7 +49,7 @@
 
   <section id="request-history" data-bind="foreach: requests">
     <div class="historical-req request">
-      <div class="method-path">
+      <div class="method-path" data-bind="attr: {'data-status-group': statusGroup}">
         <span class="api" data-bind="text: api"></span>
         <span class="method" data-bind="text: method"></span>
         <span class="url" data-bind="text: url"></span>
@@ -61,13 +63,13 @@
         </div>
       </div>
       <!-- ko if: formattableResponse -->
-      <div class='response-cont' data-bind="if: response">
+      <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup}, if: response">
         <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
 
         <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
       </div>
       <!-- /ko -->
-      <div class='response-cont' data-bind="if: response">
+      <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup}, if: response">
         <div class="response-label"><span class="arrow">⇤ JSON</span></div>
         <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
       </div>

@@ -1,18 +1,63 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  background-image: url('cream_pixels.png');
-  background-size: 160px 160px;
+  background-image: url('tiny_grid.png');
+  background-size: 26px 26px;
+}
+
+a {
+  color: rgb(114, 189, 53);
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.gh-link {
+  float: right;
+  margin-right: 10px;
+  font-size: 12px;
+  text-transform: none;
+}
+
+.gh-link a {
+  color: #666;
+}
+
+header {
+  padding: 0;
 }
 
 h1 {
-  font-size: 16px;
-  display: inline;  
+  font-size: 12px;
+  display: inline;
+  position: relative;
+}
+
+.hammerpick {
+  line-height: 12px;
+  font-size: 38px;
+  margin-left: 20px;
+  float: left;
+  color: rgb(168,168,168);
+}
+
+
+
+.subhead {
+  font-size: 12px;
+  text-transform: none;
 }
 
 header, h1, h2, h3 {
-  text-align: center;
+  padding-left: 10px;
+  text-align: left;
   text-transform: uppercase;
+}
+
+header {
+  border-top: 2px solid rgb(114, 204, 40);
 }
 
 h2 {
@@ -22,18 +67,21 @@ h2 {
 section {
   background-color: rgba(255,255,255,0.95);
   padding: 10px 5px;
+  border-bottom: 2px solid rgb(114, 204, 40);
+  margin-bottom: 10px;
 }
 
 #request-history {
-  border-top: 10px solid #666;
   font-family: monospace;
   margin: 0px 30px;
+  padding-top: 0;
 }
 
 #request-history .request {
   padding-bottom: 10px;
-  border-bottom: 5px solid silver;
+  border-top: 5px solid silver;
   margin-bottom: 10px;
+  padding-top: 10px;
 }
 
 #request-history .server {
@@ -43,10 +91,11 @@ section {
 
 header, #content {
   background-color: rgba(255,255,255,0.7);
+  color: #333;
   margin: 0px auto;
   display: table;
   width: 100%;
-  padding: 10px 0px;
+  padding: 5px 0px;
   border-bottom: 1px solid #eee;
 }
 
@@ -208,21 +257,51 @@ textarea.response, textarea.body {
   content: "CONN ERR ";
 }
 
-[data-status-group="500"] {
-  color: red;
+.response-cont:hover .response-label, .body-cont:hover .body-label {
+  display: none;
 }
 
-[data-status-group="400"] {
+.response-cont[data-status-group="500"] {
+  border-color: red;
+}
+
+.response-cont[data-status-group="500"] .response-label {
+  background-color: red;
+}
+.status[data-status-group="500"] {
+  color: re;d
+}
+
+.response-cont[data-status-group="400"] {
+  border-color: orangered;
+}
+.response-cont[data-status-group="400"] .response-label {
+  background-color: orangered;
+}
+.status[data-status-group="400"] {
   color: orangered;
 }
 
-[data-status-group="300"] {
-  color: purple;
+.response-cont[data-status-group="300"] {
+  border-color: purple;
+}
+.response-cont[data-status-group="300"] .response-label {
+  background-color: rgb(114, 204, 40);
+}
+.status[data-status-group="300"] {
+  color: rgb(114, 204, 40);
 }
 
-[data-status-group="200"] {
-  color: #0D0;
+.response-cont[data-status-group="200"] {
+  border-color: rgb(114, 204, 40);
 }
+.response-cont[data-status-group="200"] .response-label {
+  background-color: rgb(114, 204, 40);
+}
+.status[data-status-group="200"] {
+  color: rgb(114, 204, 40);
+}
+
 
 .method-path {
   padding-bottom: 4px;
