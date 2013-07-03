@@ -281,9 +281,8 @@ Hammer.HistoricalRequestVM = function (request) {
     window.scrollTo(0,0);
   };
 
-  this.responseFmt = ko.computed(function () {
+  this.responseParsed = ko.computed(function () {
     var respJSON;
-    var respStr;
     if (_.isString(this.response())) {
       try {
         respJSON = JSON.parse(this.response())
@@ -293,6 +292,12 @@ Hammer.HistoricalRequestVM = function (request) {
     } else {
       respJSON = this.response();
     }
+    return respJSON;
+  }, this);
+
+  this.responseFmt = ko.computed(function () {
+    var respStr;
+    var respJSON = this.responseParsed();
 
     if (respJSON) {
       return JSON.stringify(respJSON, null, 2);
@@ -331,10 +336,11 @@ Hammer.HistoricalRequestVM = function (request) {
   };
 
   this.responseNodes = ko.computed(function () {
-    return _.map(this.response(), templateifyObject);
+    return _.map(this.responseParsed(), templateifyObject);
   }, this);
 
   this.formattableResponse = ko.computed(function () {
+    if (this.status() > 299 || this.status < 200) return false;
     return (this.api() === 'search') || (this.api() === "document" && this.method() === 'GET');
   }, this);
 
