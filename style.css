@@ -134,14 +134,17 @@ textarea.body {
 .response-cont .response-label, .body-cont .body-label {
   font-size: 11px;
   position: absolute;
-  top: 1px;
   left: 48%;
   padding: 1px 4px 1px 3px;
   opacity: 0.8;
 }
 
-.response-cont textarea.response {
+.response-cont {
+  border: 1px solid;
+  width: 100%;
   border-color: rgb(71, 36, 255);
+  max-height: 500px;
+  overflow: scroll;
 }
 
 .response-label {
@@ -255,4 +258,8 @@ textarea {
 
 .fmt-node-value {
   font-weight: bold;
+}
+
+.fmt-nodes img {
+  width: 100px;
 }

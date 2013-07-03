@@ -55,18 +55,23 @@
         <span class='run-again' data-bind="event: {click: runAgain}">Re-Run </span>
       </div>
       <div class='body-cont' data-bind="if: body">
-        <div class="body-label"><span class="arrow">⇥ body</span></div>
+        <div class="body-label"><span class="arrow">⇥ Body</span></div>
         <div class="body">
           <textarea disabled='true' class='body' data-bind="text: body, autoTextArea: body"></textarea>
         </div>
       </div>
       <!-- ko if: formattableResponse -->
-      <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
+      <div class='response-cont' data-bind="if: response">
+        <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
+
+        <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
+      </div>
       <!-- /ko -->
       <div class='response-cont' data-bind="if: response">
-        <div class="response-label"><span class="arrow">⇤ resp</span></div>
+        <div class="response-label"><span class="arrow">⇤ JSON</span></div>
         <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
       </div>
+
 
     </div>
   </section>
@@ -75,10 +80,9 @@
     <div class="fmt-node">
       <span class="fmt-node-name" data-bind="text: name"></span>:
       <!-- ko ifnot: isObject -->
-        <span class="fmt-node-value" data-bind="text: value"></span>
+        <span class="fmt-node-value" data-bind="html: value"></span>
       <!-- /ko -->
       <!-- ko if: isObject -->
-        <span class="fmt-node-name" data-bind="text: name"></span>:
         <div class='fmt-nodes' data-bind="template: {name: 'formattedResponseTmpl', foreach: value}"></div>    
     <!-- /ko -->
     </div>

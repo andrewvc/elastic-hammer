@@ -301,6 +301,20 @@ Hammer.HistoricalRequestVM = function (request) {
     }
   }, this);
 
+  var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+
+  var formatValue = function (value) {
+    if (_.isString(value) && value.match(urlPattern)) {
+      var inner = value;
+      if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
+        inner = "<img src='" + value + "'/>"; 
+      }
+      return "<a href='" + value + "'>" + inner + '</a>';
+    } else {
+      return encodeURIComponent(value);
+    }
+  }
+  
   var templateifyObject;
   templateifyObject = function (value, name) {
     if (_.isArray(value)) {
@@ -308,7 +322,7 @@ Hammer.HistoricalRequestVM = function (request) {
     } else if (_.isObject(value)) {
       return {name: name, value: _.map(value, templateifyObject), isObject: true, };
     } else {
-      return {name: name, value: value, isObject: false};
+      return {name: name, value: formatValue(value), isObject: false};
     }
   };
 
