@@ -7,12 +7,13 @@ Features
 
 * Auto-checks JSON as you type
 * Compact, auto-sizing layout, for maximum information density
+* Displays image URLs as actual images, URLs in search results in URLs
 * Path based API detection enabling automatic smart settings during use
 * Cross Platform
 * Uses HTML5 localstorage to keep your request history
 
 To Come:
 
-* Smartly formatted search API/explain API/Analyze API output (images, links, ellipsis, etc.)
+* Improved output formatting
 * Custom output formatters
 * Automatic index detection
