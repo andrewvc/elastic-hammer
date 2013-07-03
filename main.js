@@ -302,13 +302,13 @@ Hammer.HistoricalRequestVM = function (request) {
   }, this);
 
   var templateifyObject;
-  templateifyObject = function (value, name, arrIdx) {
+  templateifyObject = function (value, name) {
     if (_.isArray(value)) {
-      return {name: name, isObject: true, arrIdx: name, isArrVal: true, value: _.map(value, function (v,i) { return templateifyObject(v, "___eharr___", i) })};
+      return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
     } else if (_.isObject(value)) {
-      return {name: name, value: _.map(value, templateifyObject), isObject: true, isArrVal: false, arrIdx: arrIdx};
+      return {name: name, value: _.map(value, templateifyObject), isObject: true, };
     } else {
-      return {name: name, value: value, isObject: false, arrIdx: arrIdx, isArrVal: (name === "___eharr___")};
+      return {name: name, value: value, isObject: false};
     }
   };
 

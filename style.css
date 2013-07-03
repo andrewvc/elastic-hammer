@@ -242,7 +242,7 @@ textarea {
 }
 
 .fmt-node:hover {
-  background-color: rgb(255,255,0);
+  /*background-color: rgb(255,255,0);*/
 }
 
 .fmt-nodes {

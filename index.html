@@ -72,27 +72,16 @@
   </section>
 
   <script id="formattedResponseTmpl" type="text/html">
-    <!-- ko ifnot: isObject -->
-      <div class="fmt-node" data-bind="attr: {'data-is-arr-val': isArrVal}">
-        <!-- ko ifnot: isArrVal -->
-        <span class="fmt-node-name" data-bind="text: name"></span>:
-        <!-- /ko -->
-        <!-- ko if: isArrVal -->
-        <span class="fmt-node-name" data-bind="text: arrIdx"></span>:
-        <!-- /ko -->
-        <span class="fmt-node-value" data-bind="text: value"></span>
-      </div>
-
-    <!-- /ko -->
-    <!-- ko if: isObject -->
-      <!-- ko if: isArrVal -->
-      <span class="fmt-node-name" data-bind="text: arrIdx"></span>:
-      <!-- /ko -->
-      <!-- ko ifnot: isArrVal -->
+    <div class="fmt-node">
       <span class="fmt-node-name" data-bind="text: name"></span>:
+      <!-- ko ifnot: isObject -->
+        <span class="fmt-node-value" data-bind="text: value"></span>
       <!-- /ko -->
-      <div class='fmt-nodes' data-bind="template: {name: 'formattedResponseTmpl', foreach: value}"></div>    
+      <!-- ko if: isObject -->
+        <span class="fmt-node-name" data-bind="text: name"></span>:
+        <div class='fmt-nodes' data-bind="template: {name: 'formattedResponseTmpl', foreach: value}"></div>    
     <!-- /ko -->
+    </div>
   </script>
 
 </body>
