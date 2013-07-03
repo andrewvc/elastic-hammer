@@ -303,15 +303,19 @@ Hammer.HistoricalRequestVM = function (request) {
 
   var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
 
+  var escaper = $('<span>');
   var formatValue = function (value) {
+    value = escaper.text(value).html();
+    
     if (_.isString(value) && value.match(urlPattern)) {
+      // Cheesey HTML escape
       var inner = value;
       if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
         inner = "<img src='" + value + "'/>"; 
       }
       return "<a href='" + value + "'>" + inner + '</a>';
     } else {
-      return encodeURIComponent(value);
+      return value;
     }
   }
   
