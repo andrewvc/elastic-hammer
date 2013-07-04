@@ -99,11 +99,6 @@ section {
   background-color: rgb(255,255,255);
 }
 
-#request-history .server {
-  font-size: 10px;
-  margin: 2px 0 4px 0;
-}
-
 #content {
   background-color: rgba(255,255,255,0.7);
   color: #333;
@@ -237,6 +232,49 @@ textarea.body {
   font-weight: bold;
 }
 
+.req-meta {
+  display: inline-block;
+  height: 13px;
+  display: inline-block;
+  position: relative;
+  top: -3px;
+}
+
+.req-meta th, .req-meta td {
+  line-height: 10px;
+  border-right: 1px solid silver;
+  padding: 0 3px;
+  text-align: center;
+}
+
+.req-meta th:first-child, .req-meta td:first-child {
+  border-left: 1px solid silver;
+}
+
+.req-meta th {
+  font-size: 10px;
+}
+
+.req-meta td {
+  font-size: 12px;
+}
+
+.req-meta td.server {
+  font-size: 10px;
+  max-width: 50px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.req-meta td.api {
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.req-meta td.server:hover {
+  max-width: none;
+  overflow: visible;
+}
 
 #body {
   margin-right: 15px;
@@ -252,12 +290,6 @@ textarea.response, textarea.body {
   overflow: auto;
 }
 
-.api {
-  background-color: #f8f8f8;
-  text-transform: uppercase;
-  padding: 1px 2px;
-}
-
 .status {
   font-weight: bold
 }
@@ -270,7 +302,7 @@ textarea.response, textarea.body {
   line-height: 25px;
   top: -2px;
   position: relative;
-  min-width: 88px;
+  min-width: 85px;
   text-align: right;
 }
 

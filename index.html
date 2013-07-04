@@ -50,11 +50,24 @@
   <section id="request-history" data-bind="foreach: requests">
     <div class="historical-req request">
       <div class="method-path" data-bind="attr: {'data-status-group': statusGroup}">
-        <span class="api" data-bind="text: api"></span>
         <span class="method" data-bind="text: method"></span>
-        <span class="url" data-bind="text: url"></span>
-       | ⇄ <span class='time'  data-bind="text: rtt"></span>
-        | = <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
+        <span class="url" data-bind="text: slashPath"></span>
+        <table class="req-meta">
+          <thead>
+            <th>API</th>
+            <th>server</th>
+            <th>rtt</th>
+            <th>status</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td class='api'  data-bind="text: api"></td>
+              <td class='server'  data-bind="text: serverNoProto"></td>
+              <td class='rtt'  data-bind="text: rtt"></td>
+              <td class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></td>
+            </tr>
+          </tbody>
+        </table>
         <span class='run-again' data-bind="event: {click: runAgain}">↺R</span>
       </div>
       <div class='body-cont' data-bind="if: body">

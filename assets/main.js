@@ -220,7 +220,7 @@ Hammer.RequestBaseVM = function (request) {
     if (apiStr) {
       return this.path().substr(0,0) + request.api();
     } else {
-      return '';
+      return '?';
     }
   }, this);
 
@@ -284,6 +284,14 @@ Hammer.HistoricalRequestVM = function (request) {
      $('#current-request').removeClass('highlight')
     }, 200);
   };
+
+  this.slashPath = ko.computed(function () {
+    return '/' + this.path();
+  }, this);
+
+  this.serverNoProto = ko.computed(function () {
+    return this.server().replace(/^https?:\/\//,'');
+  }, this);
 
   this.rtt = ko.computed(function () {
     if (this.ended() && this.started()) {
