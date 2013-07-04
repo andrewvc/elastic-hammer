@@ -271,6 +271,14 @@ textarea.body {
   font-size: 10px;
 }
 
+.req-meta td.api[data-api=document] {
+  color: rgb(197, 40, 204);
+}
+
+.req-meta td.api[data-api=search] {
+  color: rgb(140, 182, 255);
+}
+
 .req-meta td.server:hover {
   max-width: none;
   overflow: visible;

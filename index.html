@@ -61,7 +61,7 @@
           </thead>
           <tbody>
             <tr>
-              <td class='api'  data-bind="text: api"></td>
+              <td class='api' data-bind="text: api, attr: {'data-api': api}"></td>
               <td class='server'  data-bind="text: serverNoProto"></td>
               <td class='rtt'  data-bind="text: rtt"></td>
               <td class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></td>
