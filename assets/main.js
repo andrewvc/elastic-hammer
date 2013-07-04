@@ -3,6 +3,8 @@ Hammer = {
   Util: {}
 };
 
+// Backbone Models + Collections
+
 Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height);
   var height = (ta.scrollHeight);
@@ -28,16 +30,6 @@ Hammer.Indexes = Backbone.Collection.extend({
       });
   }
 });
-
-Hammer.IndexVM = function (index) {
-  _.extend(this, kb.viewModel(index));
-}
-
-Hammer.IndexesVM = function(indexes) {
-  this.indexes = kb.collectionObservable(indexes, {view_model: Hammer.IndexVM})
-};
-
-Hammer.Data.indexes = new Hammer.Indexes;
 
 Hammer.Request = Backbone.Model.extend({
   defaults: function () {
@@ -223,11 +215,31 @@ Hammer.RequestHistory = Backbone.Collection.extend({
   }
 });
 
+// ViewModels
+
 ko.bindingHandlers.autoTextArea = {
   update: function(ta, valueAccessor, allBindingsAccessor) {
     Hammer.Util.autoTextArea(ta);
   }
 };
+
+Hammer.IndexVM = function (index) {
+  _.extend(this, kb.viewModel(index));
+}
+
+Hammer.IndexesVM = function(indexes) {
+  this.indexes = kb.collectionObservable(indexes, {view_model: Hammer.IndexVM})
+};
+
+Hammer.HistReqsHeaderVM = function () {
+  this.clear = function () {
+    if (confirm("Are you sure? This will delete ALL request history!")) {
+      Hammer.Data.history.models.map(function (m,i) { 
+        return m.destroy();
+      });
+    }
+  };
+}
 
 Hammer.RequestBaseVM = function (request) {
   _.extend(this, kb.viewModel(request));
@@ -437,18 +449,24 @@ Hammer.HistoricalRequestsVM = function (requests) {
   this.requests = kb.collectionObservable(requests, {view_model: Hammer.HistoricalRequestVM})
 }
 
+// Initialization
+
 $(function () {
   Hammer.Data.history = new Hammer.RequestHistory();
   Hammer.Data.current = new Hammer.Request();
+  Hammer.Data.indexes = new Hammer.Indexes;
 
   // The Current Request
   var curReqVM = new Hammer.CurrentRequestVM(Hammer.Data.current);
   ko.applyBindings(curReqVM, $('#current-request')[0]);
 
+  var histReqsHeaderVM = new Hammer.HistReqsHeaderVM();
+  ko.applyBindings(histReqsHeaderVM, $('#request-history-header')[0]);
+    
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);
-  ko.applyBindings(histReqsVM, $('#request-history')[0]);
-
+  ko.applyBindings(histReqsVM, $('#historical-reqs')[0]);
+  
   // Datalist for indexes
   var indexesDLVM = new Hammer.IndexesVM(Hammer.Data.indexes);
   ko.applyBindings(indexesDLVM, $('#pathauto')[0]);

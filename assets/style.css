@@ -187,6 +187,8 @@ textarea.body {
 }
 
 .historical-req {
+  margin-top: 10px;
+  clear: both;
   padding: 0 5px
 }
 
@@ -436,4 +438,28 @@ textarea {
 
 .fmt-nodes img {
   width: 100px;
+}
+
+#request-history-header {
+  background-color: #fff;
+}
+
+#request-history-header h2 {
+  display: inline-block;
+  margin: 10px 0;
+}
+
+#clear-request-history {
+  cursor: pointer;
+  float: right;
+  font-size: 12px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  color: orangered;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+#clear-request-history:hover {
+  text-decoration: underline;
 }
