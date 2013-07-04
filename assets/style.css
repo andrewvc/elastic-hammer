@@ -202,6 +202,7 @@ textarea.body {
 .response-cont .response-label, .body-cont .body-label {
   font-size: 11px;
   position: absolute;
+  top: 0;
   left: 48%;
   padding: 1px 4px 1px 3px;
   opacity: 0.8;
@@ -285,8 +286,13 @@ textarea.response, textarea.body {
   content: "CONN ERR ";
 }
 
-.response-cont:hover .response-label, .body-cont:hover .body-label {
-  display: none;
+.response-cont:hover, .body-cont:hover {
+  padding-top: 15px;
+  -webkit-transition: all 0.1s ease-in-out;                 
+  -moz-transition: all 0.1s ease-in-out;                
+  -o-transition: all 0.1s ease-in-out;  
+  -ms-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 .response-cont[data-status-group="500"] {

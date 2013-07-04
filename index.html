@@ -53,8 +53,8 @@
         <span class="api" data-bind="text: api"></span>
         <span class="method" data-bind="text: method"></span>
         <span class="url" data-bind="text: url"></span>
-       | ⇄ <span class='time'  data-bind="text: rtt"></span>
-       | = <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
+       | <span class='time'  data-bind="text: rtt"></span>
+       ⇄ | = <span class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></span>
         <span class='run-again' data-bind="event: {click: runAgain}">↺R</span>
       </div>
       <div class='body-cont' data-bind="if: body">
