@@ -268,9 +268,11 @@ textarea.response, textarea.body {
   cursor: pointer;
   margin-right: 10px;
   font-size: 18px;
-  line-height: 12px;
-  top: 4px;
+  line-height: 25px;
+  top: -2px;
   position: relative;
+  min-width: 88px;
+  text-align: right;
 }
 
 .run-again:hover:after {
