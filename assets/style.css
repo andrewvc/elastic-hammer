@@ -288,6 +288,7 @@ textarea.response, textarea.body {
 
 .response-cont:hover, .body-cont:hover {
   padding-top: 15px;
+
   -webkit-transition: all 0.1s ease-in-out;                 
   -moz-transition: all 0.1s ease-in-out;                
   -o-transition: all 0.1s ease-in-out;  
@@ -303,7 +304,7 @@ textarea.response, textarea.body {
   background-color: red;
 }
 .status[data-status-group="500"] {
-  color: re;d
+  color: red;
 }
 
 .response-cont[data-status-group="400"] {
