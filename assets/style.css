@@ -3,6 +3,7 @@ body {
   font-size: 14px;
   background-image: url('tiny_grid.png');
   background-size: 26px 26px;
+  margin: 0;
 }
 
 a {
@@ -16,8 +17,8 @@ a:hover {
 
 .gh-link {
   float: right;
-  margin-right: 10px;
   font-size: 12px;
+  margin-right: 4px;
   text-transform: none;
 }
 
@@ -26,7 +27,11 @@ a:hover {
 }
 
 header {
-  padding: 0;
+  background-color: rgba(255,255,255,0.8);
+  padding: 10px 5px;
+  border: 2px solid rgb(168,168,168);
+  border-left: 0;
+  border-right: 0
 }
 
 h1 {
@@ -38,9 +43,9 @@ h1 {
 .hammerpick {
   line-height: 12px;
   font-size: 38px;
-  margin-left: 20px;
+  margin-left: 5px;
   float: left;
-  color: rgb(168,168,168);
+  color: rgb(114, 204, 40);
 }
 
 
@@ -56,19 +61,18 @@ header, h1, h2, h3 {
   text-transform: uppercase;
 }
 
-header {
-  border-top: 2px solid rgb(114, 204, 40);
-}
-
 h2 {
   font-size: 14px;
 }
 
 section {
-  background-color: rgba(255,255,255,0.95);
-  padding: 10px 5px;
-  border-bottom: 2px solid rgb(114, 204, 40);
   margin-bottom: 10px;
+}
+
+#current-request {
+  background-color: rgba(236, 236, 236, 0.8);
+  padding: 5px 10px;
+  border-bottom: 1px solid silver;
 }
 
 #request-history {
@@ -78,10 +82,11 @@ section {
 }
 
 #request-history .request {
-  padding-bottom: 10px;
+  padding: 10px 10px;
   border-top: 5px solid silver;
   margin-bottom: 10px;
-  padding-top: 10px;
+
+  background-color: rgb(255,255,255);
 }
 
 #request-history .server {
@@ -89,7 +94,7 @@ section {
   margin: 2px 0 4px 0;
 }
 
-header, #content {
+#content {
   background-color: rgba(255,255,255,0.7);
   color: #333;
   margin: 0px auto;
@@ -176,6 +181,10 @@ textarea.body {
   background-color: #f8f8f8;
 }
 
+.historical-req {
+  padding: 0 5px
+}
+
 .historical-req .url {
   font-size: 12px;
 }
@@ -238,7 +247,11 @@ textarea.response, textarea.body {
   padding: 1px 2px;
 }
 
-.status, .run-again {
+.status {
+  font-weight: bold
+}
+
+.run-again {
   font-weight: bold;
   float: right;
 }

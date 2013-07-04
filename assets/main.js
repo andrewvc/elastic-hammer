@@ -139,17 +139,17 @@ Hammer.Request = Backbone.Model.extend({
     ).success(
       function (d,ts,xhr) {
         self.set({state: 'succeeded', response: d, status: xhr.status});
-        self.trigger('complete');
         self.trigger('success');
       }
     ).error(
       function (xhr) {
         self.set({state: 'errored', response: xhr.responseText, status: xhr.status});
-        self.trigger('complete');
+
         self.trigger('error');
-    }).done(
+    }).complete(
       function (xhr) {
         self.set('ended', Date.now());
+        self.trigger('complete');
     });
 
   },
@@ -230,7 +230,7 @@ Hammer.RequestBaseVM = function (request) {
       type = '';
     else
       type = ' ' + type.toUpperCase() + '';
-    return 'Execute ' + this.method() + type.toUpperCase() + $('<span> (&#9166; or CTRL+&#9166;)</span>').text();
+    return 'Execute ' + this.method() + type.toUpperCase() +' (⏎ or CTRL+⏎)';
   }, this);
 
   this.updatePath = function (vm, e) {
@@ -280,6 +280,14 @@ Hammer.HistoricalRequestVM = function (request) {
     });
     window.scrollTo(0,0);
   };
+
+  this.rtt = ko.computed(function () {
+    if (this.ended() && this.started()) {
+      return (this.ended() - this.started()) + 'ms';
+    } else {
+      return null
+    }
+  },this);
 
   this.responseParsed = ko.computed(function () {
     var respJSON;
