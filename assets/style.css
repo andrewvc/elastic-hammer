@@ -203,8 +203,7 @@ textarea.body {
   font-size: 11px;
   position: absolute;
   top: 0;
-  right: 50%;
-  margin-right: -60px;
+  right: 0;
   padding: 1px 4px 1px 3px;
   opacity: 0.8;
 }
@@ -275,6 +274,11 @@ textarea.response, textarea.body {
   text-align: right;
 }
 
+.run-again:after {
+  content: '';
+  font-size:12px;
+}
+
 .run-again:hover:after {
   content: "un Again";
   font-size:12px;
@@ -291,7 +295,6 @@ textarea.response, textarea.body {
 
 .response-cont:hover .response-label, .body-cont:hover .body-label {
   opacity: 0.3;
-  right: 0;
   margin-right: 0;
   -webkit-transition: all 0.05s ease-in-out;                 
   -moz-transition: all 0.05s ease-in-out;                
