@@ -21,6 +21,10 @@
       [ <a href="https://github.com/andrewvc/elastic-hammer">github</a> ]
     </div>
   </header>
+  
+  <datalist id="pathauto" data-bind="foreach: indexes">
+    <option data-bind="text: index"></option>
+  </datalist>
 
   <section id="current-request" class="request-form">
     <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
@@ -34,7 +38,7 @@
         </select>
         <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
         /
-        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {keyup: updatePath, paste: updatePath}" />
+        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {focus: fetchIndexes, keyup: updatePath, paste: updatePath}" list="pathauto" />
         </div>
         
         <div class="body-cont" data-bind="if: bodyCapable">
@@ -77,6 +81,20 @@
         </div>
       </div>
       <!-- ko if: formattableResponse -->
+      <!-- ko if: contextMeta -->
+      <table class='context-meta req-meta' data-bind="with: contextMeta">
+        <thead>
+          <tr data-bind="foreach: ths">
+            <th data-bind="text: th"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-bind="foreach: tds">
+            <td data-bind="text: td"></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- /ko -->
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup}, if: response">
         <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
 
@@ -91,7 +109,7 @@
 
     </div>
   </section>
-
+  
   <script id="formattedResponseTmpl" type="text/html">
     <div class="fmt-node">
       <span class="fmt-node-name" data-bind="text: name"></span>:

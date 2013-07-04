@@ -15,6 +15,30 @@ Hammer.Util.autoTextArea = function (ta) {
   }
 };
 
+Hammer.Index = Backbone.Model.extend({});
+Hammer.Indexes = Backbone.Collection.extend({
+  model: Hammer.Index,
+  refresh: function (server) {
+    var self = this;
+    $.get('http://localhost:9200/_status').
+      success(function (body) {
+        self.reset((_.map(_.keys(body.indices), function (idx) {
+          return {index: idx};
+        })));
+      });
+  }
+});
+
+Hammer.IndexVM = function (index) {
+  _.extend(this, kb.viewModel(index));
+}
+
+Hammer.IndexesVM = function(indexes) {
+  this.indexes = kb.collectionObservable(indexes, {view_model: Hammer.IndexVM})
+};
+
+Hammer.Data.indexes = new Hammer.Indexes;
+
 Hammer.Request = Backbone.Model.extend({
   defaults: function () {
     return {
@@ -36,6 +60,10 @@ Hammer.Request = Backbone.Model.extend({
   bodyCapable: function () {
     var method = this.get('method');
     return (method === 'PUT' || method === 'POST');
+  },
+  ok: function () {
+    var status = this.get('status')
+    return (status >= 200 && status < 300);
   },
   // Attempt to guess helpful API settings as paths are typed
   apiGuessSettings: function () {
@@ -233,11 +261,15 @@ Hammer.RequestBaseVM = function (request) {
     return 'Execute ' + this.method() + type.toUpperCase() +' (⏎ or CTRL+⏎)';
   }, this);
 
+  this.fetchIndexes = function (vm, e) {
+    Hammer.Data.indexes.refresh();
+  };
+
   this.updatePath = function (vm, e) {
     request.set('path', $(e.currentTarget).val());
     request.apiGuessSettings();
     return true;
-  }
+  };
 
   this.url = ko.computed(function (self) {
     return request.reqUrl();
@@ -301,6 +333,28 @@ Hammer.HistoricalRequestVM = function (request) {
     }
   },this);
 
+  this.contextMeta = ko.computed(function () {
+    var api = request.api();
+    if (! api || !request.ok()) return;
+    
+    var response = this.response();
+    var ths = [];
+    var tds = [];
+    var kv = function(k,v) { 
+      ths.push({th: k});
+      tds.push({td: v});
+    }
+    if (api === 'search') {
+      kv('took', response.took + 'ms');
+      kv('total', response.hits.total);
+      kv('max score', response.hits.max_score);
+      kv('shards', response._shards.successful + '/' + response._shards.total)
+    } else {
+      return;
+    }
+    return {ths: ths, tds: tds};
+  }, this);
+
   this.responseParsed = ko.computed(function () {
     var respJSON;
     if (_.isString(this.response())) {
@@ -356,7 +410,15 @@ Hammer.HistoricalRequestVM = function (request) {
   };
 
   this.responseNodes = ko.computed(function () {
-    return _.map(this.responseParsed(), templateifyObject);
+    var resp;
+    var rp = this.responseParsed();
+    if (this.api() == 'search' && rp.hits) {
+      resp = rp.hits.hits;
+    } else {
+      this.responseParsed();
+    }
+
+    return _.map(resp, templateifyObject);
   }, this);
 
   this.formattableResponse = ko.computed(function () {
@@ -386,4 +448,8 @@ $(function () {
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);
   ko.applyBindings(histReqsVM, $('#request-history')[0]);
+
+  // Datalist for indexes
+  var indexesDLVM = new Hammer.IndexesVM(Hammer.Data.indexes);
+  ko.applyBindings(indexesDLVM, $('#pathauto')[0]);
 });
