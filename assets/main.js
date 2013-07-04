@@ -279,6 +279,10 @@ Hammer.HistoricalRequestVM = function (request) {
       body: request.get('body')
     });
     window.scrollTo(0,0);
+    $('#current-request').addClass('highlight');
+    setTimeout(function () {
+     $('#current-request').removeClass('highlight')
+    }, 200);
   };
 
   this.rtt = ko.computed(function () {

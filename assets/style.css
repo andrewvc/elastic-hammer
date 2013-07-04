@@ -73,6 +73,16 @@ section {
   background-color: rgba(236, 236, 236, 0.8);
   padding: 5px 10px;
   border-bottom: 1px solid silver;
+  -webkit-transition: background-color 0.2s ease-in-out;                 
+  -moz-transition: background-color 0.2s ease-in-out;                
+  -o-transition: background-color 0.2s ease-in-out;  
+  -ms-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#current-request.highlight {
+
+  background-color: rgb(241, 255, 229);
 }
 
 #request-history {
@@ -252,13 +262,18 @@ textarea.response, textarea.body {
 }
 
 .run-again {
-  font-weight: bold;
   float: right;
-}
-
-.run-again {
   cursor: pointer;
   margin-right: 10px;
+  font-size: 18px;
+  line-height: 12px;
+  top: 4px;
+  position: relative;
+}
+
+.run-again:hover:after {
+  content: "un Again";
+  font-size:12px;
 }
 
 .run-again:hover {
