@@ -17,8 +17,11 @@
 <body>
   <header>
     <span class='hammerpick'>&#9874;</span><h1>elastic hammer</h1>
-    <div class="gh-link">
-      [ <a href="https://github.com/andrewvc/elastic-hammer">github</a> ]
+    <div class="links">
+      [ 
+      <span id="clear-request-history" data-bind="event: {click: clear}">Clear Hist.</span> |
+      <a href="https://github.com/andrewvc/elastic-hammer">github</a>
+      ]
     </div>
   </header>
   
@@ -52,11 +55,6 @@
   </section>
 
   <section id="request-history">
-    <div id="request-history-header">
-      <h2>Request History</h2>
-      <div id="clear-request-history" data-bind="event: {click: clear}">[Clear]</div>
-    </div>
-    
     <div id="historical-reqs" data-bind="foreach: requests">
     <div class="historical-req request">
       <div class="method-path" data-bind="attr: {'data-status-group': statusGroup}">

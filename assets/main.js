@@ -231,12 +231,17 @@ Hammer.IndexesVM = function(indexes) {
   this.indexes = kb.collectionObservable(indexes, {view_model: Hammer.IndexVM})
 };
 
-Hammer.HistReqsHeaderVM = function () {
+Hammer.ClearHistoryVM = function () {
   this.clear = function () {
     if (confirm("Are you sure? This will delete ALL request history!")) {
-      Hammer.Data.history.models.map(function (m,i) { 
-        return m.destroy();
-      });
+      // TODO: Not sure why this needs to be called multiple times
+      // It will delete > 1 models, but stop at some point for reasons
+      // I don't understand
+      while (Hammer.Data.history.size() > 0) {
+        Hammer.Data.history.map(function (m,i) { 
+          return m.destroy();
+        });
+      };
     }
   };
 }
@@ -460,8 +465,7 @@ $(function () {
   var curReqVM = new Hammer.CurrentRequestVM(Hammer.Data.current);
   ko.applyBindings(curReqVM, $('#current-request')[0]);
 
-  var histReqsHeaderVM = new Hammer.HistReqsHeaderVM();
-  ko.applyBindings(histReqsHeaderVM, $('#request-history-header')[0]);
+  ko.applyBindings(new Hammer.ClearHistoryVM, $('#clear-request-history')[0]);
     
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);

@@ -15,7 +15,7 @@ a:hover {
   text-decoration: none;
 }
 
-.gh-link {
+header .links {
   float: right;
   font-size: 12px;
   margin-right: 4px;
@@ -451,13 +451,10 @@ textarea {
 
 #clear-request-history {
   cursor: pointer;
-  float: right;
-  font-size: 12px;
-  margin-top: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   color: orangered;
   font-weight: bold;
-  margin-right: 10px;
 }
 
 #clear-request-history:hover {
