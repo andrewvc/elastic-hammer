@@ -332,6 +332,7 @@ Hammer.HistoricalRequestVM = function (request) {
     setTimeout(function () {
      $('#current-request').removeClass('highlight')
     }, 200);
+    $('#path').focus();
   };
 
   this.slashPath = ko.computed(function () {
