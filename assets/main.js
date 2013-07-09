@@ -6,10 +6,10 @@ Hammer = {
 // Backbone Models + Collections
 
 Hammer.Util.autoTextArea = function (ta) {
-  var oldh = parseInt(ta.style.height);
+  var oldh = parseInt(ta.style.height,10);
   var height = (ta.scrollHeight);
   var capped = (height > 200) ? 200 : height;
-  ta.style.height = capped + 'px';
+  ta.style.minHeight = capped + 'px';
 
   // Chrome adds an extra 4px. This fixes that bug
   if (parseInt(ta.style.height) - oldh < 6) {
