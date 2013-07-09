@@ -33,12 +33,20 @@ Hammer.Indexes = Backbone.Collection.extend({
 
 Hammer.Request = Backbone.Model.extend({
   defaults: function () {
+    var server;
+    
+    if (window.location.pathname === "/_plugin/elastic-hammer/") {
+      server = window.location.protocol + '//' + window.location.host;
+    } else {
+      server = 'http://localhost:9200';
+    };
+    
     return {
       started: null,
       ended: null,
       state: 'fresh',
       method: 'GET',
-      server: 'http://localhost:9200',
+      server: server,
       path: '',
       body: null,
       response: null,
