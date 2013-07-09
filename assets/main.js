@@ -9,10 +9,10 @@ Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height,10);
   var height = (ta.scrollHeight);
   var capped = (height > 200) ? 200 : height;
-  ta.style.minHeight = capped + 'px';
+  ta.style.height = capped + 'px';
 
   // Chrome adds an extra 4px. This fixes that bug
-  if (parseInt(ta.style.height) - oldh < 6) {
+  if (parseInt(ta.style.height, 10) - oldh < 6) {
     ta.style.height = oldh + 'px';
   }
 };
