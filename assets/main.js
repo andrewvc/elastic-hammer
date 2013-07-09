@@ -1,4 +1,4 @@
-Hammer = {
+window.Hammer = {
   Data: {},
   Util: {}
 };
@@ -22,7 +22,7 @@ Hammer.Indexes = Backbone.Collection.extend({
   model: Hammer.Index,
   refresh: function (server) {
     var self = this;
-    $.get('http://localhost:9200/_status').
+    $.get(server + '/_status').
       success(function (body) {
         self.reset((_.map(_.keys(body.indices), function (idx) {
           return {index: idx};
@@ -292,7 +292,7 @@ Hammer.RequestBaseVM = function (request) {
   }, this);
 
   this.fetchIndexes = function (vm, e) {
-    Hammer.Data.indexes.refresh();
+    Hammer.Data.indexes.refresh(this.server());
   };
 
   this.updatePath = function (vm, e) {
