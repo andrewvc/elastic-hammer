@@ -22,9 +22,9 @@ Hammer.Indexes = Backbone.Collection.extend({
   model: Hammer.Index,
   refresh: function (server) {
     var self = this;
-    $.get(server + '/_status').
+    $.get(server + '/_cluster/state').
       success(function (body) {
-        self.reset((_.map(_.keys(body.indices), function (idx) {
+        self.reset((_.map(_.keys(body.metadata.indices), function (idx) {
           return {index: idx};
         })));
       });
