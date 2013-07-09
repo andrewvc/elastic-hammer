@@ -36,7 +36,6 @@ Hammer.Request = Backbone.Model.extend({
     var server;
     
     var pathComponents = _.compact(window.location.pathname.split('/'));
-    console.log(pathComponents);
     if (pathComponents[pathComponents.length - 1] === 'elastic-hammer'
         && pathComponents[pathComponents.length - 2] === '_plugin') {
       server = window.location.protocol + '//' + window.location.host;
