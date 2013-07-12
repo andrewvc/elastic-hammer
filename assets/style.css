@@ -400,6 +400,10 @@ textarea.response, textarea.body {
   top: 0;
 }
 
+.context-meta.req-meta[data-shard-failure=true] {
+  background-color: rgb(255, 235, 229);  
+}
+
 .context-meta.req-meta td {
   padding: auto;
 }

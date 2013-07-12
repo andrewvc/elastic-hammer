@@ -446,7 +446,7 @@ Hammer.HistoricalRequestVM = function (request) {
     if (this.api() == 'search' && rp.hits) {
       resp = {};
       
-      if (rp._shards && rp._shards.failures) resp.failures = rp._shards.failures;
+      if (rp._shards && rp._shards.failures) resp.shardFailures = rp._shards.failures;
 
       try {
         resp.hits = rp.hits.hits;
@@ -468,6 +468,11 @@ Hammer.HistoricalRequestVM = function (request) {
     return (this.api() === 'search') || (this.api() === "document" && this.method() === 'GET');
   }, this);
 
+  this.shardFailure = ko.computed(function () {
+    var resp = this.response();
+    return (!!(resp._shards && resp._shards.failures)).toString();
+  }, this);
+  
   this.statusGroup = ko.computed(function () {
     this.status.peek();
     this.state.peek();
