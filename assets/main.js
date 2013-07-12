@@ -445,13 +445,16 @@ Hammer.HistoricalRequestVM = function (request) {
     var rp = this.responseParsed();
     if (this.api() == 'search' && rp.hits) {
       resp = {};
+      
+      if (rp._shards && rp._shards.failures) resp.failures = rp._shards.failures;
+
       try {
         resp.hits = rp.hits.hits;
       } catch (e) {
         console.error(e);
         resp.hits = "Could not retrieve hits";
       };
-
+      
       if (rp.facets) resp.facets = rp.facets;
     } else {
       this.responseParsed();
