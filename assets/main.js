@@ -456,16 +456,26 @@ Hammer.HistoricalRequestVM = function (request) {
       
       if (rp.facets) resp.facets = rp.facets;
     } else {
-      this.responseParsed();
+      resp = this.responseParsed();
     }
 
     return _.map(resp, templateifyObject);
   }, this);
 
   this.formattableResponse = ko.computed(function () {
-    if (this.status() > 299 || this.status < 200) return false;
-    return (this.api() === 'search') || (this.api() === "document" && this.method() === 'GET');
+    // Pretty format all non-string (JSON) responses
+    return !_.isString(this.response());
   }, this);
+
+  this.jsonChosen = ko.observable(false);
+  this.jsonActivated = ko.computed(function () {
+    return !this.formattableResponse() || this.jsonChosen();
+  }, this);
+
+  this.toggleJson = function () {
+    console.log("SHOWING JSON");
+    this.jsonChosen(!this.jsonChosen());
+  }
 
   this.shardFailure = ko.computed(function () {
     var resp = this.response();

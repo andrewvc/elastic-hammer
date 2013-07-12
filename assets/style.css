@@ -71,7 +71,7 @@ section {
 
 #current-request {
   background-color: rgba(236, 236, 236, 0.8);
-  padding: 5px 10px;
+  padding: 5px 18px;
   border-bottom: 1px solid silver;
   -webkit-transition: background-color 0.2s ease-in-out;                 
   -moz-transition: background-color 0.2s ease-in-out;                
@@ -196,6 +196,15 @@ textarea.body {
   font-size: 12px;
 }
 
+.showJSON {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.showJSON:hover {
+  color: gray;
+}
+
 .response-cont .response-label, .body-cont .body-label {
   font-size: 11px;
   position: absolute;
@@ -211,6 +220,14 @@ textarea.body {
   border-color: rgb(71, 36, 255);
   max-height: 500px;
   overflow: scroll;
+}
+
+.response-cont.json {
+  margin-top: 10px;
+}
+
+.response-cont.json .response-label {
+  cursor: pointer;
 }
 
 .response-label {

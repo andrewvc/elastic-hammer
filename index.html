@@ -105,9 +105,15 @@
         <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
       </div>
       <!-- /ko -->
-      <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup}, if: response">
-        <div class="response-label"><span class="arrow">⇤ JSON</span></div>
+
+      <div class='response-cont json' data-bind="attr: {'data-status-group': statusGroup}">
+        <!-- ko if: formattableResponse -->
+        <div class='showJSON' data-bind="event: {click: toggleJson}">SHOW/HIDE</div>
+        <!-- /ko -->
+        <div class="response-label" data-bind="event: {click: toggleJson}"><span class="arrow">⇤ JSON</span></div>
+        <!-- ko if: jsonActivated -->
         <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
+        <!-- /ko -->
       </div>
 
 
