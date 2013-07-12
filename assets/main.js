@@ -401,13 +401,12 @@ Hammer.HistoricalRequestVM = function (request) {
   }, this);
 
   this.responseFmt = ko.computed(function () {
-    var respStr;
     var respJSON = this.responseParsed();
 
     if (respJSON) {
       return JSON.stringify(respJSON, null, 2);
     } else {
-      return respStr;
+      return this.response();
     }
   }, this);
 
