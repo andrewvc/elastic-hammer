@@ -260,6 +260,9 @@ textarea.body {
 }
 
 .req-meta th, .req-meta td {
+  vertical-align: top; /* Helps when a field overflows heightwise */
+  max-height: 15px;
+  overflow: hidden;
   line-height: 10px;
   border-right: 1px solid silver;
   padding: 0 3px;
