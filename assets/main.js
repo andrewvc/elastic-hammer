@@ -105,6 +105,8 @@ Hammer.Request = Backbone.Model.extend({
       return 'mapping';
     case '_settings':
       return '_settings';
+    case '_analyze':
+      return 'analyze';
     case '_bulk':
       return 'bulk';
     };
@@ -122,7 +124,8 @@ Hammer.Request = Backbone.Model.extend({
 
     var body = this.get('body');
     var method = this.get('method');
-    if (this.bodyCapable() && body !== undefined && body !== null && body.trim() !== '' && this.api() !== 'bulk') {
+    var nonJSON = ['bulk', 'analyze']
+    if (this.bodyCapable() && body !== undefined && body !== null && body.trim() !== '' && !_.include(nonJSON, this.api())) {
       try {
         JSON.parse(body);
       } catch (ex) {
