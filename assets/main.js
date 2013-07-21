@@ -415,30 +415,37 @@ Hammer.HistoricalRequestVM = function (request) {
 
   var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
 
-  var escaper = $('<span>');
-  var formatValue = function (value) {
-    value = escaper.text(value).html();
-    
-    if (_.isString(value) && value.match(urlPattern)) {
+  var formatValue = function (value) {    
+    var isString = typeof(value) === 'string'
+    if (isString && value.match(urlPattern)) {
       // Cheesey HTML escape
       var inner = value;
       if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
         inner = "<img src='" + value + "'/>"; 
       }
       return "<a href='" + value + "'>" + inner + '</a>';
+    } else if (isString) {
+      return '"' + value + '"';
     } else {
       return value;
     }
   }
   
-  var templateifyObject;
-  templateifyObject = function (value, name) {
+ 
+  var escaper = $('<span>');
+  var escapeText = function(text) {
+    return escaper.text(text).html();
+  };
+  
+  var templateifyObject = function (value, name) {
+    name = escapeText(name);
     if (_.isArray(value)) {
       return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
     } else if (_.isObject(value)) {
       return {name: name, value: _.map(value, templateifyObject), isObject: true };
     } else {
-      return {name: name, value: formatValue(value), isObject: false};
+      console.log("N", name, value.constructor);
+      return {name: name, value: escapeText(formatValue(value)), isObject: false};
     }
   };
 
