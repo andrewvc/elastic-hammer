@@ -444,6 +444,7 @@ Hammer.HistoricalRequestVM = function (request) {
     } else if (_.isObject(value)) {
       return {name: name, value: _.map(value, templateifyObject), isObject: true };
     } else {
+      if (!value) { value = null };
       console.log("N", name, value.constructor);
       return {name: name, value: escapeText(formatValue(value)), isObject: false};
     }
