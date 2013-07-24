@@ -443,10 +443,11 @@ Hammer.HistoricalRequestVM = function (request) {
       return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
     } else if (_.isObject(value)) {
       return {name: name, value: _.map(value, templateifyObject), isObject: true };
-    } else {
-      if (!value) { value = null };
+    } else if (value) {
       console.log("N", name, value.constructor);
       return {name: name, value: escapeText(formatValue(value)), isObject: false};
+    } else {
+      return {name: name, value: null, isObject: false}
     }
   };
 
