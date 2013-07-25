@@ -164,7 +164,6 @@ Hammer.Request = Backbone.Model.extend({
     this.set('started', Date.now());
 
     var reqUrl = this.reqUrl();
-    console.log("TARGET", reqUrl);
     $.ajax(
       reqUrl,
       {
