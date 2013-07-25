@@ -453,7 +453,7 @@ Hammer.HistoricalRequestVM = function (request) {
   this.responseNodes = ko.computed(function () {
     var resp;
     var rp = this.responseParsed();
-    if (this.api() == 'search' && rp.hits) {
+    if (this.api() == 'search' && rp && rp.hits) {
       resp = {};
       
       if (rp._shards && rp._shards.failures) resp.shardFailures = rp._shards.failures;
