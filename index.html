@@ -82,7 +82,7 @@
       <div class='body-cont' data-bind="if: body">
         <div class="body-label"><span class="arrow">⇥ Body</span></div>
         <div class="body">
-          <textarea disabled='true' class='body' data-bind="text: body, autoTextArea: body"></textarea>
+          <textarea readonly='readonly' class='body' data-bind="text: body, autoTextArea: body"></textarea>
         </div>
       </div>
       <!-- ko if: formattableResponse -->
@@ -113,7 +113,7 @@
         <!-- /ko -->
         <div class="response-label" data-bind="event: {click: toggleJson}"><span class="arrow">⇤ JSON</span></div>
         <!-- ko if: jsonActivated -->
-        <textarea disabled='true' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
+        <textarea readonly='readonly' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
         <!-- /ko -->
       </div>
 
