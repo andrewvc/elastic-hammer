@@ -220,6 +220,7 @@ textarea.body {
   border-color: rgb(71, 36, 255);
   max-height: 500px;
   overflow: scroll;
+  background-color: white;
 }
 
 .response-cont.json {
