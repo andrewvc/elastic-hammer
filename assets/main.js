@@ -490,7 +490,7 @@ Hammer.HistoricalRequestVM = function (request) {
 
   this.shardFailure = ko.computed(function () {
     var resp = this.response();
-    return (!!(resp._shards && resp._shards.failures)).toString();
+    return (!!(resp && resp._shards && resp._shards.failures)).toString();
   }, this);
   
   this.statusGroup = ko.computed(function () {
