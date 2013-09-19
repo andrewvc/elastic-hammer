@@ -200,7 +200,7 @@ Hammer.Request = Backbone.Model.extend({
 
 Hammer.RequestHistory = Backbone.Collection.extend({
   localStorage: new Backbone.LocalStorage("request-history"),
-  maxRecords: 500,
+  maxRecords: 120,
   model: Hammer.Request,
   initialize: function () {
     this.fetch();
