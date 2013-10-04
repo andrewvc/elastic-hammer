@@ -421,8 +421,9 @@ Hammer.HistoricalRequestVM = function (request) {
       var inner = value;
       if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
         inner = "<img src='" + value + "'/>"; 
-      }
-      return "<a href='" + value + "'>" + inner + '</a>';
+        console.log("ENCOUNTER", value);
+      };
+      return {"hammer-no-escape": true, value: "<a href='" + value + "'>" + inner + '</a>'};
     } else if (isString) {
       return '"' + value + '"';
     } else {
@@ -438,13 +439,16 @@ Hammer.HistoricalRequestVM = function (request) {
   
   var templateifyObject = function (value, name) {
     name = escapeText(name);
+
     if (_.isArray(value)) {
       return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
     } else if (_.isObject(value)) {
       return {name: name, value: _.map(value, templateifyObject), isObject: true };
     } else if (value !== undefined && value !== null) {
-      console.log("N", name, value.constructor);
-      return {name: name, value: escapeText(formatValue(value)), isObject: false};
+      var fmt = formatValue(value);
+
+      var escVal = (fmt["hammer-no-escape"] === true) ? fmt["value"] : escapeText(fmt);
+      return {name: name, value: escVal, isObject: false};
     } else {
       return {name: name, value: null, isObject: false}
     }
