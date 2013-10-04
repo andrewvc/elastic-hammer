@@ -421,7 +421,6 @@ Hammer.HistoricalRequestVM = function (request) {
       var inner = value;
       if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
         inner = "<img src='" + value + "'/>"; 
-        console.log("ENCOUNTER", value);
       };
       return {"hammer-no-escape": true, value: "<a href='" + value + "'>" + inner + '</a>'};
     } else if (isString) {
@@ -488,7 +487,6 @@ Hammer.HistoricalRequestVM = function (request) {
   }, this);
 
   this.toggleJson = function () {
-    console.log("SHOWING JSON");
     this.jsonChosen(!this.jsonChosen());
   }
 
