@@ -103,7 +103,7 @@
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
         <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
 
-        <div class='fmt-nodes fmt-nodes-top' data-bind="template: {name: 'formattedResponseTmpl', foreach: responseNodes}"></div>
+        <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse"></div>
       </div>
       <!-- /ko -->
 

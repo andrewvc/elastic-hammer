@@ -453,7 +453,13 @@ textarea {
   padding-left: 10px;
 }
 
-.fmt-node-name {
+.fmt-nodes ul.yaml-map, .fmt-nodes ol.yaml-array {
+  margin: 0px;
+  padding-left: 30px;
+}
+
+.yaml-map-key {
+  font-weight: bold;
   color: #444;
 }
 

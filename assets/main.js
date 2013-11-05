@@ -3,8 +3,6 @@ window.Hammer = {
   Util: {}
 };
 
-// Backbone Models + Collections
-
 Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height,10);
   var height = (ta.scrollHeight);
@@ -16,6 +14,49 @@ Hammer.Util.autoTextArea = function (ta) {
     ta.style.height = oldh + 'px';
   }
 };
+
+// Print an object as yaml HTML recursively
+Hammer.Util.yamlRoots = {
+  string: $('<span class="yaml-string">'),
+  boolTrue: $('<span class="boolean">true</span>'),
+  boolFalse: $('<span class="boolean">false</span>')
+};
+Hammer.Util.printYaml = function (obj) {
+  if (_.isString(obj)) {
+    var s = Hammer.Util.yamlRoots.string.clone();
+    s.text('"' + obj + '"');
+    return s;
+  } else if (_.isNumber(obj)) {
+    var s = $('<span class="yaml-number">');
+    s.text(obj);
+    return s;
+  } else if (_.isNull(obj)) {
+    return $('<span class="yaml-null">null</span>');
+  } else if (_.isBoolean(obj)) {
+    return (obj ? Hammer.Util.yamlRoots.boolTrue : Hammer.Util.yamlRoots.boolFalse);
+  } else if (_.isArray(obj)) {
+    var arr = $('<ol class="yaml-array"></ol>')
+    return arr.html(_.map(obj, function (v) {
+      var li = $('<li class="yaml-array-elem">');
+      li.html(Hammer.Util.printYaml(v))
+      return li;
+    }));
+  } else if (_.isObject(obj)) {
+    var map = $('<ul class="yaml-map">')
+    return map.html(_.map(obj, function(v,k) {
+      var li = $('<li class="yaml-map-elem">');
+      var key = $('<span class="yaml-map-key">');
+      key.text(k + ': ');
+      li.append(key);
+      li.append(Hammer.Util.printYaml(v));
+      return li;
+    }));
+  } else {
+    console.error("Can't YAMLize obj", obj);
+  }
+};
+
+// Backbone Models + Collections
 
 Hammer.Index = Backbone.Model.extend({});
 Hammer.Indexes = Backbone.Collection.extend({
@@ -438,17 +479,23 @@ Hammer.HistoricalRequestVM = function (request) {
   
   var templateifyObject = function (value, name) {
     name = escapeText(name);
+    console.log("TEMPLATIFY", value, name)
 
     if (_.isArray(value)) {
+      console.log("IS ARRAY", value)
       return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
     } else if (_.isObject(value)) {
+      console.log("IS OBJ", value)
       return {name: name, value: _.map(value, templateifyObject), isObject: true };
     } else if (value !== undefined && value !== null) {
+
       var fmt = formatValue(value);
+      console.log("NO ESCAPE", value, fmt);
 
       var escVal = (fmt["hammer-no-escape"] === true) ? fmt["value"] : escapeText(fmt);
       return {name: name, value: escVal, isObject: false};
     } else {
+      console.log("WAT", value);
       return {name: name, value: null, isObject: false}
     }
   };
@@ -474,6 +521,10 @@ Hammer.HistoricalRequestVM = function (request) {
     }
 
     return _.map(resp, templateifyObject);
+  }, this);
+
+  this.formattedResponse = ko.computed(function () {
+    return Hammer.Util.printYaml(this.response()).html();
   }, this);
 
   this.formattableResponse = ko.computed(function () {
