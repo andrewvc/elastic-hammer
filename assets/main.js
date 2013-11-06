@@ -3,6 +3,8 @@ window.Hammer = {
   Util: {}
 };
 
+Hammer.Util.urlPattern = /^http:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*/;
+
 Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height,10);
   var height = (ta.scrollHeight);
@@ -15,38 +17,72 @@ Hammer.Util.autoTextArea = function (ta) {
   }
 };
 
-// Print an object as yaml HTML recursively
+// Print an object as yaml-ish HTML recursively
+Hammer.Util.typeString = function (o) {
+  if (_.isArray(o)) {
+    return "[]"
+  } else if (_.isObject(o)) {
+    return "{}"
+  }
+  return "";
+};
 Hammer.Util.yamlRoots = {
   string: $('<span class="yaml-string">'),
-  boolTrue: $('<span class="boolean">true</span>'),
-  boolFalse: $('<span class="boolean">false</span>')
+  boolTrue: $('<span class="yaml-boolean true">true</span>'),
+  boolFalse: $('<span class="yaml-boolean false">false</span>'),
+  number: $('<span class="yaml-number">'),
+  null: $('<span class="yaml-null">null</span>'),
+  arrRoot: $('<ol class="yaml-array"></ol>'),
+  arrElem: $('<li class="yaml-array-elem">'),
+  mapRoot: $('<ul class="yaml-map">'),
+  mapElem: $('<li class="yaml-map-elem">'),
+  mapKey: $('<span class="yaml-map-key">'),
+  anchor: $('<a>'),
+  img: $('<img>'),
 };
 Hammer.Util.printYaml = function (obj) {
   if (_.isString(obj)) {
     var s = Hammer.Util.yamlRoots.string.clone();
-    s.text('"' + obj + '"');
-    return s;
+    
+    if (! obj.match(Hammer.Util.urlPattern)) {
+      s.text('"' + obj + '"');
+      return s;
+    } else {
+      var a = Hammer.Util.yamlRoots.anchor.clone();
+
+      a.attr('href', obj);
+      
+      if (obj.match(/\.(jpg|jpeg|png|gif|bmp)$/)) {
+        img = Hammer.Util.yamlRoots.img.clone();
+        img.attr('src', obj);
+        a.html(img)
+      } else {
+        a.text(obj);        
+      }
+      
+      return a;
+    }
   } else if (_.isNumber(obj)) {
-    var s = $('<span class="yaml-number">');
+    var s = Hammer.Util.yamlRoots.number.clone();
     s.text(obj);
     return s;
   } else if (_.isNull(obj)) {
-    return $('<span class="yaml-null">null</span>');
+    return Hammer.Util.yamlRoots.null.clone();
   } else if (_.isBoolean(obj)) {
-    return (obj ? Hammer.Util.yamlRoots.boolTrue : Hammer.Util.yamlRoots.boolFalse);
+    return (obj ? Hammer.Util.yamlRoots.boolTrue.clone() : Hammer.Util.yamlRoots.boolFalse.clone());
   } else if (_.isArray(obj)) {
-    var arr = $('<ol class="yaml-array"></ol>')
+    var arr = Hammer.Util.yamlRoots.arrRoot.clone();
     return arr.html(_.map(obj, function (v) {
-      var li = $('<li class="yaml-array-elem">');
+      var li = Hammer.Util.yamlRoots.arrElem.clone(); 
       li.html(Hammer.Util.printYaml(v))
       return li;
     }));
   } else if (_.isObject(obj)) {
-    var map = $('<ul class="yaml-map">')
+    var map = Hammer.Util.yamlRoots.mapRoot.clone();
     return map.html(_.map(obj, function(v,k) {
-      var li = $('<li class="yaml-map-elem">');
-      var key = $('<span class="yaml-map-key">');
-      key.text(k + ': ');
+      var li = Hammer.Util.yamlRoots.mapElem.clone();
+      var key =  Hammer.Util.yamlRoots.mapKey.clone();
+      key.text(k + Hammer.Util.typeString(v) + ': ');
       li.append(key);
       li.append(Hammer.Util.printYaml(v));
       return li;
@@ -453,16 +489,13 @@ Hammer.HistoricalRequestVM = function (request) {
     }
   }, this);
 
-  var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/
+  
 
   var formatValue = function (value) {    
     var isString = typeof(value) === 'string'
     if (isString && value.match(urlPattern)) {
       // Cheesey HTML escape
-      var inner = value;
-      if (value.match(/\.(jpg|jpeg|png|gif)$/)) {
-        inner = "<img src='" + value + "'/>"; 
-      };
+
       return {"hammer-no-escape": true, value: "<a href='" + value + "'>" + inner + '</a>'};
     } else if (isString) {
       return '"' + value + '"';
@@ -470,59 +503,7 @@ Hammer.HistoricalRequestVM = function (request) {
       return value;
     }
   }
-  
  
-  var escaper = $('<span>');
-  var escapeText = function(text) {
-    return escaper.text(text).html();
-  };
-  
-  var templateifyObject = function (value, name) {
-    name = escapeText(name);
-    console.log("TEMPLATIFY", value, name)
-
-    if (_.isArray(value)) {
-      console.log("IS ARRAY", value)
-      return {name: name, isObject: true, value: _.map(value, function (v,i) { return templateifyObject(v, i) })};
-    } else if (_.isObject(value)) {
-      console.log("IS OBJ", value)
-      return {name: name, value: _.map(value, templateifyObject), isObject: true };
-    } else if (value !== undefined && value !== null) {
-
-      var fmt = formatValue(value);
-      console.log("NO ESCAPE", value, fmt);
-
-      var escVal = (fmt["hammer-no-escape"] === true) ? fmt["value"] : escapeText(fmt);
-      return {name: name, value: escVal, isObject: false};
-    } else {
-      console.log("WAT", value);
-      return {name: name, value: null, isObject: false}
-    }
-  };
-
-  this.responseNodes = ko.computed(function () {
-    var resp;
-    var rp = this.responseParsed();
-    if (this.api() == 'search' && rp && rp.hits) {
-      resp = {};
-      
-      if (rp._shards && rp._shards.failures) resp.shardFailures = rp._shards.failures;
-
-      try {
-        resp.hits = rp.hits.hits;
-      } catch (e) {
-        console.error(e);
-        resp.hits = "Could not retrieve hits";
-      };
-      
-      if (rp.facets) resp.facets = rp.facets;
-    } else {
-      resp = this.responseParsed();
-    }
-
-    return _.map(resp, templateifyObject);
-  }, this);
-
   this.formattedResponse = ko.computed(function () {
     return Hammer.Util.printYaml(this.response()).html();
   }, this);

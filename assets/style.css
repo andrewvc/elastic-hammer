@@ -453,9 +453,33 @@ textarea {
   padding-left: 10px;
 }
 
-.fmt-nodes ul.yaml-map, .fmt-nodes ol.yaml-array {
+ul.yaml-map, .fmt-nodes {
+  list-style-type: none;
+}
+
+.yaml-array-elem > .yaml-map {
+  padding-left: 0;
+}
+
+ul.yaml-map, .fmt-nodes ol.yaml-array {
   margin: 0px;
   padding-left: 30px;
+}
+
+.yaml-boolean {
+  font-weight: bold;
+}
+
+.yaml-boolean.true {
+  color: #00AD15;
+}
+
+.yaml-boolean.false {
+  color: #F15B2B;
+}
+
+.yaml-number {
+  color: #EF3AFF;
 }
 
 .yaml-map-key {
