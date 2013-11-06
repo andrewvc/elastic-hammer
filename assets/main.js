@@ -32,7 +32,7 @@ Hammer.Util.yamlRoots = {
   boolFalse: $('<span class="yaml-boolean false">false</span>'),
   number: $('<span class="yaml-number">'),
   null: $('<span class="yaml-null">null</span>'),
-  arrRoot: $('<ol class="yaml-array"></ol>'),
+  arrRoot: $('<ol class="yaml-array" start="0"></ol>'),
   arrElem: $('<li class="yaml-array-elem">'),
   mapRoot: $('<ul class="yaml-map">'),
   mapElem: $('<li class="yaml-map-elem">'),
