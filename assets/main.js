@@ -84,7 +84,16 @@ Hammer.Util.printYaml = function (obj) {
       var v = obj[k];
       var li = Hammer.Util.yamlRoots.mapElem.clone();
       var key =  Hammer.Util.yamlRoots.mapKey.clone();
-      key.text(k + Hammer.Util.typeString(v) + ': ');
+      var ts = Hammer.Util.typeString(v);
+
+      if (ts) {
+        key.addClass("expandable");
+        key.addClass("open");
+        key.text("▾ " + k + ts);
+      } else {
+        key.text(k + ': ');
+      }
+
       li.append(key);
       li.append(Hammer.Util.printYaml(v));
       return li;
@@ -491,8 +500,6 @@ Hammer.HistoricalRequestVM = function (request) {
     }
   }, this);
 
-  
-
   var formatValue = function (value) {    
     var isString = typeof(value) === 'string'
     if (isString && value.match(urlPattern)) {
@@ -519,6 +526,21 @@ Hammer.HistoricalRequestVM = function (request) {
   this.jsonActivated = ko.computed(function () {
     return !this.formattableResponse() || this.jsonChosen();
   }, this);
+
+  this.toggleExpansion = function (vm,e) {
+    var expandable = $(e.target).closest(".expandable");
+    if (expandable.hasClass('open')) {
+      expandable.text("▸" + expandable.text().slice(1));
+      expandable.siblings().hide();
+      expandable.removeClass('open');
+    } else {
+      expandable.text("▾" + expandable.text().slice(1));
+      expandable.siblings().show();
+      expandable.addClass('open');
+    }
+
+    console.log("EX", expandable, expandable.siblings());
+  };
 
   this.toggleJson = function () {
     this.jsonChosen(!this.jsonChosen());

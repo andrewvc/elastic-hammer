@@ -445,6 +445,10 @@ textarea {
   font-size: 12px;
 }
 
+.fmt-nodes-top .expandable {
+  cursor: pointer;
+}
+
 .fmt-node:hover {
   /*background-color: rgb(255,255,0);*/
 }
