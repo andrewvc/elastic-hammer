@@ -13,6 +13,14 @@
   <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
   <script type='text/javascript' src="assets/json2.js"></script>
   <script type='text/javascript' src='assets/main.js'></script>
+  
+  
+  <script type='text/javascript'>
+    window.onbeforeunload = function(e) {
+      return "Leaving will lose the current state. Request history is always saved.";
+    };
+  </script>
+  
 </head>
 <body>
   <header>
