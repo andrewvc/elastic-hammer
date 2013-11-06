@@ -40,6 +40,7 @@ Hammer.Util.yamlRoots = {
   anchor: $('<a>'),
   img: $('<img>'),
 };
+
 Hammer.Util.printYaml = function (obj) {
   if (_.isString(obj)) {
     var s = Hammer.Util.yamlRoots.string.clone();
@@ -79,7 +80,8 @@ Hammer.Util.printYaml = function (obj) {
     }));
   } else if (_.isObject(obj)) {
     var map = Hammer.Util.yamlRoots.mapRoot.clone();
-    return map.html(_.map(obj, function(v,k) {
+    return map.html(_.map(_.keys(obj), function(k) {
+      var v = obj[k];
       var li = Hammer.Util.yamlRoots.mapElem.clone();
       var key =  Hammer.Util.yamlRoots.mapKey.clone();
       key.text(k + Hammer.Util.typeString(v) + ': ');
