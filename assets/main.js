@@ -529,6 +529,9 @@ Hammer.HistoricalRequestVM = function (request) {
     Hammer.eventBus.off('requestAdded', closer);
   };
   Hammer.eventBus.on('requestAdded', closer);
+  Hammer.eventBus.on('historyLoaded', function () {
+    self.prettyChosen(false)
+  });
 
   this.runAgain = function () {
     Hammer.Data.current.generation += 1;
