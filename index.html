@@ -8,12 +8,20 @@
   <title>Elastic-Hammer</title>
 
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/style.css"></link>
+  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror.css"></link>
+  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/lint/lint.css"></link>
   <script type='text/javascript' src='assets/jquery.js'></script>
   <script type='text/javascript' src='assets/knockback.js'></script>
   <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
   <script type='text/javascript' src="assets/json2.js"></script>
+  <script type='text/javascript' src='assets/codemirror.js'></script>
+  <script type='text/javascript' src="assets/codemirror-addons/lint/lint.js"></script>
+  <script type='text/javascript' src='assets/codemirror-addons/lint/javascript-lint.js'></script>
+  <script type='text/javascript' src='assets/jsonlint.js'></script>
+  <script type='text/javascript' src='assets/jshint.js'></script>
+  <script type='text/javascript' src='assets/codemirror-addons/lint/json-lint.js'></script>
+
   <script type='text/javascript' src='assets/main.js'></script>
-  
   
   <script type='text/javascript'>
     window.onbeforeunload = function(e) {
@@ -55,9 +63,10 @@
         
         <div class="body-cont" data-bind="if: bodyCapable">
           <div class="errors" data-bind="text: errors"></div>
-          <textarea name='body' class="body" data-bind="value: body, autoTextArea: body, event: {keyup: vAutoTextArea, paste: vAutoTextArea}"></textarea>
-        </div>
+          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers'],
+ }"></textarea>
 
+        </div>
       </div>
       <input type='submit' data-bind="value: apiSubmit" id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
     </form>

@@ -147,7 +147,11 @@ Hammer.Request = Backbone.Model.extend({
       errors: ""
     };
   },
+  
   initialize: function () {
+    // Changes when re-initialized with a new state
+    // This helps keep codemirror in sync
+    this.generation = 0;
     this.on('change', this.validate, this);
   },
   bodyCapable: function () {
@@ -320,6 +324,43 @@ Hammer.RequestHistory = Backbone.Collection.extend({
 
 // ViewModels
 
+ko.bindingHandlers.codemirror = {
+  init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    var options = valueAccessor();
+    var editor = CodeMirror.fromTextArea(element, options);
+    editor.on('change', function(cm) {
+      allBindingsAccessor().value(cm.getValue());
+    });
+    element.editor = editor;
+
+    if(allBindingsAccessor().value()) {
+      $(element).data('generation', bindingContext.$data.model().generation);
+      editor.setValue(allBindingsAccessor().value());
+    }
+    editor.refresh();
+    var wrapperElement = $(editor.getWrapperElement());
+
+    ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+      wrapperElement.remove();
+    });
+  },
+  update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+    var $e = $(element);
+    var newBody = bindingContext.$data.model().get('body') || "";
+    var oldGeneration = $e.data('generation')
+    var newGeneration = bindingContext.$data.model().generation;
+
+    if(element.editor) {
+      if (oldGeneration !== newGeneration) {
+        console.log("CHANGE", oldGeneration, newGeneration);
+        element.editor.refresh();
+        $e.data('generation', newGeneration);
+        element.editor.setValue(newBody);      
+      }
+    }
+  }
+};
+
 ko.bindingHandlers.autoTextArea = {
   update: function(ta, valueAccessor, allBindingsAccessor) {
     Hammer.Util.autoTextArea(ta);
@@ -423,13 +464,17 @@ Hammer.CurrentRequestVM = function (request) {
 Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
 
+
   this.runAgain = function () {
+    Hammer.Data.current.generation += 1;
     Hammer.Data.current.set({
       method: request.get('method'),
       server: request.get('server'),
       path: request.get('path'),
       body: request.get('body')
     });
+
+
     window.scrollTo(0,0);
     $('#current-request').addClass('highlight');
     setTimeout(function () {
