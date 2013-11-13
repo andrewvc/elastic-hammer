@@ -359,7 +359,32 @@ ko.bindingHandlers.codemirror = {
     	  rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace)
       }
     };
+
+
     var editor = CodeMirror.fromTextArea(element, _.extend(defaultOptions, options));
+
+    var timeout;
+    editor.on("keyup", function(cm, event) {
+      var popupKeyCodes = {
+        "9": "tab",
+        "13": "enter",
+        "27": "escape",
+        "33": "pageup",
+        "34": "pagedown",
+        "35": "end",
+        "36": "home",
+        "38": "up",
+        "40": "down"
+      }
+      if(!popupKeyCodes[(event.keyCode || event.which).toString()] && !editor.state.completionActive)
+      {
+        if(timeout) clearTimeout(timeout);
+        timeout = setTimeout(function() {
+          console.log('showing hint');        
+          CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch, {completeSingle: true});
+        }, 150);
+      }            
+    });
 
     editor.on('change', function(cm) {
       allBindingsAccessor().value(cm.getValue());
