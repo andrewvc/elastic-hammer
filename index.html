@@ -124,9 +124,7 @@
       </table>
       <!-- /ko -->
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
-        <div class='showResponse' data-bind="event: {click: togglePretty}">SHOW/HIDE</div>
-        <div class="response-label" data-bind="event: {click: togglePretty}"><span class="arrow">⇤ Pretty</span></div>
-        
+        <div class='showResponse' data-bind="event: {click: togglePretty}">↡ Pretty Response ↟</div>
         <!-- ko if: prettyActivated -->
         <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse, event: {click: toggleExpansion}"></div>
         <!-- /ko -->
@@ -135,9 +133,8 @@
 
       <div class='response-cont json' data-bind="attr: {'data-status-group': statusGroup}">
         <!-- ko if: formattableResponse -->
-        <div class='showResponse' data-bind="event: {click: toggleJson}">SHOW/HIDE</div>
+        <div class='showResponse' data-bind="event: {click: toggleJson}">↡ JSON Response ↟</div>
         <!-- /ko -->
-        <div class="response-label" data-bind="event: {click: toggleJson}"><span class="arrow">⇤ JSON</span></div>
         <!-- ko if: jsonActivated -->
         <textarea readonly='readonly' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
         <!-- /ko -->

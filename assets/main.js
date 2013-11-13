@@ -318,6 +318,11 @@ Hammer.RequestHistory = Backbone.Collection.extend({
   maxRecords: 120,
   model: Hammer.Request,
   initialize: function () {
+    this.on('sync', function () {
+      setTimeout(function () {
+        Hammer.eventBus.trigger('historyLoaded');
+      }, 0);
+    });
     this.fetch();
     this.on('add', this.trim, this);
     this.on('add', function () {
