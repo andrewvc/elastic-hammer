@@ -10,11 +10,15 @@
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/style.css"></link>
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror.css"></link>
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/lint/lint.css"></link>
+  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/fold/foldgutter.css"></link>
   <script type='text/javascript' src='assets/jquery.js'></script>
   <script type='text/javascript' src='assets/knockback.js'></script>
   <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
   <script type='text/javascript' src="assets/json2.js"></script>
   <script type='text/javascript' src='assets/codemirror.js'></script>
+  <script type='text/javascript' src="assets/codemirror-addons/fold/foldcode.js"></script>
+  <script type='text/javascript' src="assets/codemirror-addons/fold/foldgutter.js"></script>
+  <script type='text/javascript' src="assets/codemirror-addons/fold/brace-fold.js"></script>
   <script type='text/javascript' src="assets/codemirror-addons/lint/lint.js"></script>
   <script type='text/javascript' src='assets/codemirror-addons/lint/javascript-lint.js'></script>
   <script type='text/javascript' src='assets/jsonlint.js'></script>
@@ -63,7 +67,9 @@
         
         <div class="body-cont" data-bind="if: bodyCapable">
           <div class="errors" data-bind="text: errors"></div>
-          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers'],
+          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter'], foldGutter: {
+    	rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace)
+    }
  }"></textarea>
 
         </div>
@@ -118,15 +124,18 @@
       </table>
       <!-- /ko -->
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
+        <div class='showResponse' data-bind="event: {click: togglePretty}">SHOW/HIDE</div>
         <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
-
+        
+        <!-- ko if: prettyActivated -->
         <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse, event: {click: toggleExpansion}"></div>
+        <!-- /ko -->
       </div>
       <!-- /ko -->
 
       <div class='response-cont json' data-bind="attr: {'data-status-group': statusGroup}">
         <!-- ko if: formattableResponse -->
-        <div class='showJSON' data-bind="event: {click: toggleJson}">SHOW/HIDE</div>
+        <div class='showResponse' data-bind="event: {click: toggleJson}">SHOW/HIDE</div>
         <!-- /ko -->
         <div class="response-label" data-bind="event: {click: toggleJson}"><span class="arrow">⇤ JSON</span></div>
         <!-- ko if: jsonActivated -->

@@ -196,12 +196,13 @@ textarea.body {
   font-size: 12px;
 }
 
-.showJSON {
+.showResponse {
   cursor: pointer;
   font-weight: bold;
+  border-bottom: 1px solid silver;
 }
 
-.showJSON:hover {
+.showResponse:hover {
   color: gray;
 }
 

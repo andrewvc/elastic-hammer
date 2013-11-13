@@ -464,7 +464,6 @@ Hammer.CurrentRequestVM = function (request) {
 Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
 
-
   this.runAgain = function () {
     Hammer.Data.current.generation += 1;
     Hammer.Data.current.set({
@@ -473,7 +472,6 @@ Hammer.HistoricalRequestVM = function (request) {
       path: request.get('path'),
       body: request.get('body')
     });
-
 
     window.scrollTo(0,0);
     $('#current-request').addClass('highlight');
@@ -567,10 +565,16 @@ Hammer.HistoricalRequestVM = function (request) {
     return !_.isString(this.response());
   }, this);
 
+  this.prettyChosen = ko.observable(true);
+  this.prettyActivated = ko.computed(function () {
+    return !this.formattableResponse() || this.prettyChosen();
+  }, this);
+  
   this.jsonChosen = ko.observable(false);
   this.jsonActivated = ko.computed(function () {
     return !this.formattableResponse() || this.jsonChosen();
   }, this);
+
 
   this.toggleExpansion = function (vm,e) {
     var expandable = $(e.target).closest(".expandable");
@@ -583,9 +587,11 @@ Hammer.HistoricalRequestVM = function (request) {
       expandable.siblings().show();
       expandable.addClass('open');
     }
-
-    console.log("EX", expandable, expandable.siblings());
   };
+
+  this.togglePretty = function () {
+    this.prettyChosen(!this.prettyChosen());
+  }
 
   this.toggleJson = function () {
     this.jsonChosen(!this.jsonChosen());
