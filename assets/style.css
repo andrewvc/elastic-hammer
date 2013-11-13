@@ -220,7 +220,7 @@ textarea.body {
   width: 100%;
   border-color: rgb(71, 36, 255);
   max-height: 500px;
-  overflow: scroll;
+  overflow: auto;
   background-color: white;
 }
 
@@ -228,7 +228,7 @@ textarea.body {
   margin-top: 10px;
 }
 
-.response-cont.json .response-label {
+.response-cont .response-label {
   cursor: pointer;
 }
 

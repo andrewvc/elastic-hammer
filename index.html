@@ -125,7 +125,7 @@
       <!-- /ko -->
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
         <div class='showResponse' data-bind="event: {click: togglePretty}">SHOW/HIDE</div>
-        <div class="response-label"><span class="arrow">⇤ Pretty</span></div>
+        <div class="response-label" data-bind="event: {click: togglePretty}"><span class="arrow">⇤ Pretty</span></div>
         
         <!-- ko if: prettyActivated -->
         <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse, event: {click: toggleExpansion}"></div>
