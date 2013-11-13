@@ -181,10 +181,10 @@ Hammer.Request = Backbone.Model.extend({
       started: null,
       ended: null,
       state: 'fresh',
-      method: 'GET',
+      method: 'POST',
       server: server,
       path: '',
-      body: null,
+      body: '{}',
       response: null,
       status: null,
       errors: ""
@@ -530,12 +530,12 @@ Hammer.HistoricalRequestVM = function (request) {
   // Only the most recent request stays visible unless a secondary requset is opened
   var self = this;
   var closer = function () {
-    self.prettyChosen(false)
+    //self.prettyChosen(false)
     Hammer.eventBus.off('requestAdded', closer);
   };
   Hammer.eventBus.on('requestAdded', closer);
   Hammer.eventBus.on('historyLoaded', function () {
-    self.prettyChosen(false)
+    //self.prettyChosen(false)
   });
 
   this.runAgain = function () {

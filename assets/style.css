@@ -69,15 +69,32 @@ section {
   margin-bottom: 10px;
 }
 
+#current-request-title {
+  font-size: 10px;
+  font-weight: bold;
+  padding-top: 5px;
+  text-align: center;
+}
+
 #current-request {
+  width: 500px;
+  overflow: hidden;
+  float: left;
   background-color: rgba(236, 236, 236, 0.8);
-  padding: 5px 18px;
-  border-bottom: 1px solid silver;
+  border: 0px solid rgba(114, 189, 53,0.4);
+  margin-top: 10px;
+  margin-left: 10px;
+  border-top-width: 5px;
+  border-bottom-width: 5px;
   -webkit-transition: background-color 0.2s ease-in-out;                 
   -moz-transition: background-color 0.2s ease-in-out;                
   -o-transition: background-color 0.2s ease-in-out;  
   -ms-transition: background-color 0.2s ease-in-out;
   transition: background-color 0.2s ease-in-out;
+}
+
+#current-request form {
+  width: 500px;
 }
 
 #current-request.highlight {
@@ -86,8 +103,9 @@ section {
 }
 
 #request-history {
+  float: left;
   font-family: monospace;
-  margin: 0px 30px;
+  margin: 0px 30px 0 10px;
   padding-top: 0;
 }
 
@@ -139,7 +157,7 @@ textarea {
 
 .request-form #path {
   display: table-cell;
-  min-width: 300px;
+  width: 280px;
 }
 #method, #server {
   display: table-cell;
@@ -273,6 +291,7 @@ textarea.body {
   border-right: 1px solid silver;
   padding: 0 3px;
   text-align: center;
+  font-weight: bold;
 }
 
 .req-meta th:first-child, .req-meta td:first-child {
