@@ -1,7 +1,50 @@
+// Autocomplete
+(function() {
+  "use strict";
+
+  var WORD = /[\w$]+/, RANGE = 500;
+  var keywords = "query filter from size sort field fields boost _boost properties rescore true false not to \
+    index not_analyzed mapping settings mappings yes no enabled \
+    match term terms operator or and type boolean bool slop window_size multi_match must should boosting positive negative negative_boost common custom_filters_score score_mode custom_score params script custom_boost_factor constant_score dis_max filtered fuzzy_like_this like_text max_query_terms fuzzy_like_this_field function_score fuzzy coordinates geo_shape has_child has_parent ids indices match_all more_like_this more_like_this_field nested prefix query_string range gt lt gte lte regexp span_first span_multi span_near clauses slop in_order span_not include exclude span_or span_term top_children _scope wildcard minimum_should_match exists geo_bounding_box geo_distance distance geo_polygon points geo_shape geohash geohash_prefix geohash_precision limit missing existence numeric_range \
+    facets facet_filter histogram interval date_histogram statistical terms_stats \
+    query_weight rescore_query_weight \
+    integer long string float double null multi_field ip index_name precision_stepinclude_in_all geo_point lat lon validate geohash geohash_precision geohash_prefix validate validate_lat validate_lon normalize normalize_lat normalize_lon attachment \
+    analyzer analysis standard simple whitespace stop keyword pattern snowball custom char_filter html_strip tokenizer stopwords keyword edgeNGram min_gram max_gram token_chars path_hierarchy letter pattern_replace \
+    null_value store uax_url_email max_token_length \
+  number_of_shards number_of_replicas warmers source";
+
+  CodeMirror.registerHelper("hint", "elasticsearch", function(editor, options) {
+
+    var word = options && options.word || WORD;
+    var range = options && options.range || RANGE;
+    var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+    var start = cur.ch, end = start;
+    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;
+    while (start && word.test(curLine.charAt(start - 1))) --start;
+    var curWord = start != end && curLine.slice(start, end);
+
+
+    var matches = _.uniq(keywords.match(new RegExp(curWord + "[A-Za-z_]+", "g")))
+    if (matches) {
+      return {list: matches, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+    } else {
+      return null;
+    }
+  });
+})();
+
+CodeMirror.commands.autocomplete = function(cm) {
+  CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch);
+};
+
 window.Hammer = {
   Data: {},
   Util: {}
 };
+
+// Global event bus
+Hammer.eventBus = {}
+_.extend(Hammer.eventBus, Backbone.Events);
 
 Hammer.Util.urlPattern = /^http:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*/;
 
@@ -152,7 +195,6 @@ Hammer.Request = Backbone.Model.extend({
     // Changes when re-initialized with a new state
     // This helps keep codemirror in sync
     this.generation = 0;
-    this.on('change', this.validate, this);
   },
   bodyCapable: function () {
     var method = this.get('method');
@@ -209,26 +251,7 @@ Hammer.Request = Backbone.Model.extend({
 
     return null;
   },
-  validate: function () {
-    if  (!this.bodyCapable()) {
-      this.set('body', null);
-    }
-
-    var body = this.get('body');
-    var method = this.get('method');
-    var nonJSON = ['bulk', 'analyze']
-    if (this.bodyCapable() && body !== undefined && body !== null && body.trim() !== '' && !_.include(nonJSON, this.api())) {
-      try {
-        JSON.parse(body);
-      } catch (ex) {
-        this.set('errors', "Invalid JSON: " + ex);
-        return false;
-      }
-    }
-
-    this.set('errors', null);
-    return true;
-  },
+  
   reqUrl: function () {
     return this.get('server') + '/' + this.get('path');
   },
@@ -297,6 +320,9 @@ Hammer.RequestHistory = Backbone.Collection.extend({
   initialize: function () {
     this.fetch();
     this.on('add', this.trim, this);
+    this.on('add', function () {
+      Hammer.eventBus.trigger('requestAdded', this);
+    }, this);
   },
   trim: function () {
     if (this.size() > this.maxRecords) {
@@ -327,7 +353,14 @@ Hammer.RequestHistory = Backbone.Collection.extend({
 ko.bindingHandlers.codemirror = {
   init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
     var options = valueAccessor();
-    var editor = CodeMirror.fromTextArea(element, options);
+    var defaultOptions = {
+      extraKeys: {'Ctrl-Space': 'autocomplete'},
+      foldGutter: {
+    	  rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace)
+      }
+    };
+    var editor = CodeMirror.fromTextArea(element, _.extend(defaultOptions, options));
+
     editor.on('change', function(cm) {
       allBindingsAccessor().value(cm.getValue());
     });
@@ -443,7 +476,6 @@ Hammer.RequestBaseVM = function (request) {
 
   this.vAutoTextArea = function (vm, e) {
     request.set('body', $(e.currentTarget).val());
-    request.validate();
     Hammer.Util.autoTextArea(e.currentTarget);
     return true;
   };
@@ -463,6 +495,15 @@ Hammer.CurrentRequestVM = function (request) {
 
 Hammer.HistoricalRequestVM = function (request) {
   _.extend(this, new Hammer.RequestBaseVM(request));
+
+  // Tidy up the view by closing requests once they are no longer fresh
+  // Only the most recent request stays visible unless a secondary requset is opened
+  var self = this;
+  var closer = function () {
+    self.prettyChosen(false)
+    Hammer.eventBus.off('requestAdded', closer);
+  };
+  Hammer.eventBus.on('requestAdded', closer);
 
   this.runAgain = function () {
     Hammer.Data.current.generation += 1;

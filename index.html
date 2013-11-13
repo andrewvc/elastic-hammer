@@ -11,11 +11,14 @@
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror.css"></link>
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/lint/lint.css"></link>
   <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/fold/foldgutter.css"></link>
+  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/hint/show-hint.css"></link>
   <script type='text/javascript' src='assets/jquery.js'></script>
   <script type='text/javascript' src='assets/knockback.js'></script>
   <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
   <script type='text/javascript' src="assets/json2.js"></script>
   <script type='text/javascript' src='assets/codemirror.js'></script>
+  <script type='text/javascript' src="assets/codemirror-addons/hint/show-hint.js"></script>
+  <script type='text/javascript' src="assets/codemirror-addons/hint/javascript-hint.js"></script>
   <script type='text/javascript' src="assets/codemirror-addons/fold/foldcode.js"></script>
   <script type='text/javascript' src="assets/codemirror-addons/fold/foldgutter.js"></script>
   <script type='text/javascript' src="assets/codemirror-addons/fold/brace-fold.js"></script>
@@ -67,10 +70,7 @@
         
         <div class="body-cont" data-bind="if: bodyCapable">
           <div class="errors" data-bind="text: errors"></div>
-          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter'], foldGutter: {
-    	rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.brace)
-    }
- }"></textarea>
+          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter']}"></textarea>
 
         </div>
       </div>
