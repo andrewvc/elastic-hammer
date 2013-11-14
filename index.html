@@ -1,114 +1,140 @@
 <!DOCTYPE html> 
 <html>
 
-<head>
+  <head>
 
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-  <title>Elastic-Hammer</title>
+    <title>Elastic-Hammer</title>
 
-  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/style.css"></link>
-  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror.css"></link>
-  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/lint/lint.css"></link>
-  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/fold/foldgutter.css"></link>
-  <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/hint/show-hint.css"></link>
-  <script type='text/javascript' src='assets/jquery.js'></script>
-  <script type='text/javascript' src='assets/knockback.js'></script>
-  <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
-  <script type='text/javascript' src="assets/json2.js"></script>
-  <script type='text/javascript' src='assets/codemirror.js'></script>
-  <script type='text/javascript' src="assets/codemirror-addons/hint/show-hint.js"></script>
-  <script type='text/javascript' src="assets/codemirror-addons/hint/javascript-hint.js"></script>
-  <script type='text/javascript' src="assets/codemirror-addons/fold/foldcode.js"></script>
-  <script type='text/javascript' src="assets/codemirror-addons/fold/foldgutter.js"></script>
-  <script type='text/javascript' src="assets/codemirror-addons/fold/brace-fold.js"></script>
-  <script type='text/javascript' src="assets/codemirror-addons/lint/lint.js"></script>
-  <script type='text/javascript' src='assets/codemirror-addons/lint/javascript-lint.js'></script>
-  <script type='text/javascript' src='assets/jsonlint.js'></script>
-  <script type='text/javascript' src='assets/jshint.js'></script>
-  <script type='text/javascript' src='assets/codemirror-addons/lint/json-lint.js'></script>
+    <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror.css"></link>
+    <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/lint/lint.css"></link>
+    <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/fold/foldgutter.css"></link>
+    <link type='text/css' rel='stylesheet' style type='text/css' href="assets/codemirror-addons/hint/show-hint.css"></link>
+    <link type='text/css' rel='stylesheet' style type='text/css' href="assets/style.css"></link>
+    <script type='text/javascript' src='assets/jquery.js'></script>
+    <script type='text/javascript' src='assets/knockback.js'></script>
+    <script type="text/javascript" src="assets/backbone.localStorage.js"></script>
+    <script type='text/javascript' src="assets/json2.js"></script>
+    <script type='text/javascript' src='assets/codemirror.js'></script>
+    <script type='text/javascript' src="assets/codemirror-addons/hint/show-hint.js"></script>
+    <script type='text/javascript' src="assets/codemirror-addons/hint/javascript-hint.js"></script>
+    <script type='text/javascript' src="assets/codemirror-addons/fold/foldcode.js"></script>
+    <script type='text/javascript' src="assets/codemirror-addons/fold/foldgutter.js"></script>
+    <script type='text/javascript' src="assets/codemirror-addons/fold/brace-fold.js"></script>
+    <script type='text/javascript' src="assets/codemirror-addons/lint/lint.js"></script>
+    <script type='text/javascript' src='assets/codemirror-addons/lint/javascript-lint.js'></script>
+    <script type='text/javascript' src='assets/jsonlint.js'></script>
+    <script type='text/javascript' src='assets/jshint.js'></script>
+    <script type='text/javascript' src='assets/codemirror-addons/lint/json-lint.js'></script>
 
-  <script type='text/javascript' src='assets/main.js'></script>
-  
-  <script type='text/javascript'>
-    window.onbeforeunload = function(e) {
+    <script type='text/javascript' src='assets/main.js'></script>
+    
+    <script type='text/javascript'>
+      window.onbeforeunload = function(e) {
       return "Leaving will lose the current state. Request history is always saved.";
-    };
-  </script>
-  
-</head>
-<body>
-  <header>
-    <span class='hammerpick'>&#9874;</span><h1>elastic hammer</h1>
-    <div class="links">
-      [ 
-      <span id="clear-request-history" data-bind="event: {click: clear}">Clear Hist.</span> |
-      <a href="http://exploringelasticsearch.com">book</a> |       
-      <a href="https://github.com/andrewvc/elastic-hammer">github</a>
-      ]
-    </div>
-  </header>
-  
-  <datalist id="pathauto" data-bind="foreach: indexes">
-    <option data-bind="text: index"></option>
-  </datalist>
-
-  <section id="current-request" class="request-form">
-    <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
-      <div class='fields'>
-        <select id="method" class='method' name='method' data-bind="value: method">
-          <option value='GET'>GET</option>
-          <option value='PUT'>PUT</option>
-          <option value='POST'>POST</option>
-          <option value='DELETE'>DELETE</option>
-          <option value='HEAD'>HEAD</option>
-        </select>
-        <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
-        /
-        <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {focus: fetchIndexes, keyup: updatePath, paste: updatePath}" list="pathauto" />
-        </div>
-        
-        <div class="body-cont" data-bind="if: bodyCapable">
-          <div class="errors" data-bind="text: errors"></div>
-          <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter']}"></textarea>
-
-        </div>
+      };
+    </script>
+    
+  </head>
+  <body>
+    <header>
+      <span class='hammerpick'>&#9874;</span><h1>elastic hammer</h1>
+      <div class="links">
+        [ 
+        <span id="clear-request-history" data-bind="event: {click: clear}">Clear Hist.</span> |
+        <a href="http://exploringelasticsearch.com">book</a> |       
+        <a href="https://github.com/andrewvc/elastic-hammer">github</a>
+        ]
       </div>
-      <input type='submit' data-bind="value: apiSubmit" id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
-    </form>
-  </section>
+    </header>
+    
+    <datalist id="pathauto" data-bind="foreach: indexes">
+      <option data-bind="text: index"></option>
+    </datalist>
+    
+    <section id="working-data">      
+      <section id="current-request" class="request-form ui-left">
+        <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
+          <div class='fields'>
+            <select id="method" class='method' name='method' data-bind="value: method">
+              <option value='GET'>GET</option>
+              <option value='PUT'>PUT</option>
+              <option value='POST'>POST</option>
+              <option value='DELETE'>DELETE</option>
+              <option value='HEAD'>HEAD</option>
+            </select>
+            <input id='server' class="server" placeholder='http://server:port' name='server' type='text' data-bind="value: server" />
+            /
+            <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {focus: fetchIndexes, keyup: updatePath, paste: updatePath}" list="pathauto" />
+          </div>
+          
+          <div class="body-cont" data-bind="if: bodyCapable">
+            <div class="errors" data-bind="text: errors"></div>
+            <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter']}"></textarea>
 
-  <section id="request-history">
-    <div id="historical-reqs" data-bind="foreach: requests">
-    <div class="historical-req request">
+          </div>
+          <input type='submit' data-bind="value: apiSubmit" id="submit-req" value='Submit (&#9166; or CTRL+&#9166;)' />
+        </form>
+      </section>
+
+      <section id="last-request" class="request-form ui-right">
+        <!-- ko if: completed -->
+        <div data-bind="template: {name: 'historical-request-tmpl'}"></div>
+        <!-- /ko -->
+        <!-- ko if: running -->
+        Executing Request...
+        <!-- /ko -->
+      </section>
+      
+      <div style="clear: both"></div>
+    </section>
+
+
+<section id="request-history">
+  <div id="request-history-title"></div>
+  <div id="historical-reqs" data-bind="foreach: requests">
+    <div class="historical-req-cont" data-bind="template: {name: 'historical-request-tmpl'}"></div>
+  </div>
+</section>
+
+<script id="historical-request-tmpl" type="text/html">
+  <div class="historical-req request">
+    <div class='body-cont ui-left' data-bind="if: body">
+      <div class="body">
+        <textarea readonly='readonly' class='body' data-bind="text: body, autoTextArea: body"></textarea>
+      </div>
+    </div>
+    <div class="resp-info">
       <div class="method-path" data-bind="attr: {'data-status-group': statusGroup}">
         <span class="method" data-bind="text: method"></span>
-        <span class="url" data-bind="text: slashPath"></span>
-        <table class="req-meta">
-          <thead>
-            <th>API</th>
-            <th>server</th>
-            <th>rtt</th>
-            <th>status</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td class='api' data-bind="text: api, attr: {'data-api': api}"></td>
-              <td class='server'  data-bind="text: serverNoProto"></td>
-              <td class='rtt'  data-bind="text: rtt"></td>
-              <td class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></td>
-            </tr>
-          </tbody>
-        </table>
-        <span class='run-again' data-bind="event: {click: runAgain}">↺R</span>
-      </div>
-      <div class='body-cont' data-bind="if: body">
-        <div class="body-label"><span class="arrow">⇥ Body</span></div>
-        <div class="body">
-          <textarea readonly='readonly' class='body' data-bind="text: body, autoTextArea: body"></textarea>
+        <span class="url" data-bind="text: slashPath"></span> 
+        <div>
+          <table class="req-meta">
+            <thead>
+              <th>API</th>
+              <th>server</th>
+              <th>rtt</th>
+              <th>status</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td class='api' data-bind="text: api, attr: {'data-api': api}"></td>
+                <td class='server'  data-bind="text: serverNoProto"></td>
+                <td class='rtt'  data-bind="text: rtt"></td>
+                <td class='status' data-bind="attr: {'data-status-group': statusGroup}, text: status"></td>
+              </tr>
+            </tbody>
+          </table>
+          <span class="misc-tools">
+            <span class='run-again' data-bind="event: {click: runAgain}">↺R</span>
+            <span class='save' data-bind="event: {click: save}">↯S</span>
+          </span>
         </div>
       </div>
-      <!-- ko if: formattableResponse -->
+        
+
+
       <!-- ko if: contextMeta -->
       <table class='context-meta req-meta' data-bind="with: contextMeta, attr: {'data-shard-failure': shardFailure}">
         <thead>
@@ -123,51 +149,42 @@
         </tbody>
       </table>
       <!-- /ko -->
+      
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
-        <div class='showResponse' data-bind="event: {click: togglePretty}">↡ Pretty Response ↟</div>
+        <!-- ko if: formattableResponse -->
+        <div class="response-switches">
+      
+          <div class='showResponse' data-bind="event: {click: togglePretty}, attr: {'data-selected': prettyChosen}">Pretty Response</div>
+          <div class='showResponse' data-bind="event: {click: toggleJson}, attr: {'data-selected': jsonChosen}">JSON Response</div>
+
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: formattableResponse -->        
         <!-- ko if: prettyActivated -->
         <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse, event: {click: toggleExpansion}"></div>
         <!-- /ko -->
-      </div>
-      <!-- /ko -->
-
-      <div class='response-cont json' data-bind="attr: {'data-status-group': statusGroup}">
-        <!-- ko if: formattableResponse -->
-        <div class='showResponse' data-bind="event: {click: toggleJson}">↡ JSON Response ↟</div>
         <!-- /ko -->
+        
         <!-- ko if: jsonActivated -->
         <textarea readonly='readonly' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
         <!-- /ko -->
       </div>
-
-
     </div>
-    </div>
-  </section>
-  
-  <script id="formattedResponseTmpl" type="text/html">
-    <div class="fmt-node">
-      <span class="fmt-node-name" data-bind="text: name"></span>:
-      <!-- ko ifnot: isObject -->
-        <span class="fmt-node-value" data-bind="html: value"></span>
-      <!-- /ko -->
-      <!-- ko if: isObject -->
-        <div class='fmt-nodes' data-bind="template: {name: 'formattedResponseTmpl', foreach: value}"></div>    
-    <!-- /ko -->
-    </div>
-  </script>
+  </div>
+</script>
 
-  <script type="text/javascript">
-    if (window.location.hostname === "elastichammer.exploringelasticsearch.com") {
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script type="text/javascript">
+  if (window.location.hostname === "elastichammer.exploringelasticsearch.com") {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-39929520-2', 'exploringelasticsearch.com');
-    ga('send', 'pageview');
-    }
-  </script>
+  ga('create', 'UA-39929520-2', 'exploringelasticsearch.com');
+  ga('send', 'pageview');
+  }
+</script>
 
 </body>
 

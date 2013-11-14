@@ -51,7 +51,7 @@ Hammer.Util.urlPattern = /^http:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*/;
 Hammer.Util.autoTextArea = function (ta) {
   var oldh = parseInt(ta.style.height,10);
   var height = (ta.scrollHeight);
-  var capped = (height > 200) ? 200 : height;
+  var capped = (height > 500) ? 500 : height;
   ta.style.height = capped + 'px';
 
   // Chrome adds an extra 4px. This fixes that bug
@@ -69,6 +69,7 @@ Hammer.Util.typeString = function (o) {
   }
   return "";
 };
+
 Hammer.Util.yamlRoots = {
   string: $('<span class="yaml-string">'),
   boolTrue: $('<span class="yaml-boolean true">true</span>'),
@@ -126,7 +127,7 @@ Hammer.Util.printYaml = function (obj) {
     return map.html(_.map(_.keys(obj), function(k) {
       var v = obj[k];
       var li = Hammer.Util.yamlRoots.mapElem.clone();
-      var key =  Hammer.Util.yamlRoots.mapKey.clone();
+      var key = Hammer.Util.yamlRoots.mapKey.clone();
       var ts = Hammer.Util.typeString(v);
 
       if (ts) {
@@ -183,7 +184,7 @@ Hammer.Request = Backbone.Model.extend({
       state: 'fresh',
       method: 'POST',
       server: server,
-      path: '',
+      path: '_search',
       body: '{}',
       response: null,
       status: null,
@@ -257,6 +258,7 @@ Hammer.Request = Backbone.Model.extend({
   },
   // Return statuses rounded down to the nearest 100. i.e. 201 -> 200
   statusGroup: function () {
+    if (!this.get('state')) { return null };
     if (this.get('state') === 'errored' && !this.get('status')) return 'errored';
     if (!this.get('status') === null) return null;
     var s = this.get('status');
@@ -279,7 +281,7 @@ Hammer.Request = Backbone.Model.extend({
     this.set('started', Date.now());
 
     var reqUrl = this.reqUrl();
-    $.ajax(
+    return $.ajax(
       reqUrl,
       {
         type: this.get('method'),
@@ -305,8 +307,12 @@ Hammer.Request = Backbone.Model.extend({
   },
   execRecord: function () {
     var eClone = this.clone();
-    Hammer.Data.history.watch(eClone);
-    eClone.exec();
+    var eFuture = eClone.exec();
+    Hammer.Data.last.set(eClone.attributes);
+    eFuture.complete(function () {
+      console.log("UPD", Hammer.Data.last);
+      Hammer.Data.last.set(eClone.attributes);
+    });
   },
   url: function () {
     return this.get('server') + '/' + this.get('path');
@@ -385,7 +391,6 @@ ko.bindingHandlers.codemirror = {
       {
         if(timeout) clearTimeout(timeout);
         timeout = setTimeout(function() {
-          console.log('showing hint');        
           CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch, {completeSingle: true});
         }, 150);
       }            
@@ -465,6 +470,14 @@ Hammer.RequestBaseVM = function (request) {
     return (m === 'POST' || m === 'PUT')
   }, this);
 
+  this.completed = ko.computed(function () {
+    return (this.state() === "succeeded" || this.state() == "errored");
+  }, this);
+
+  this.running = ko.computed(function () {
+    return this.state() === "running";
+  }, this);
+
   this.api = ko.computed(function () {
     // For some reason peek() seems to get optimized out, and
     // this never triggers unless we actually use the path() with IO
@@ -537,6 +550,11 @@ Hammer.HistoricalRequestVM = function (request) {
   Hammer.eventBus.on('historyLoaded', function () {
     //self.prettyChosen(false)
   });
+
+  this.save = function () {
+    Hammer.Data.history.add(request);
+    Hammer.Data.history.sync("create", request);
+  };
 
   this.runAgain = function () {
     Hammer.Data.current.generation += 1;
@@ -664,11 +682,13 @@ Hammer.HistoricalRequestVM = function (request) {
   };
 
   this.togglePretty = function () {
-    this.prettyChosen(!this.prettyChosen());
+    this.jsonChosen(false);
+    this.prettyChosen(true);
   }
 
   this.toggleJson = function () {
-    this.jsonChosen(!this.jsonChosen());
+    this.prettyChosen(false);
+    this.jsonChosen(true);
   }
 
   this.shardFailure = ko.computed(function () {
@@ -692,11 +712,17 @@ Hammer.HistoricalRequestsVM = function (requests) {
 $(function () {
   Hammer.Data.history = new Hammer.RequestHistory();
   Hammer.Data.current = new Hammer.Request();
+  Hammer.Data.last = new Hammer.Request();
   Hammer.Data.indexes = new Hammer.Indexes;
 
-  // The Current Request
+  // The current request
   var curReqVM = new Hammer.CurrentRequestVM(Hammer.Data.current);
   ko.applyBindings(curReqVM, $('#current-request')[0]);
+
+  // The last executed Request
+  var lastReqVM = new Hammer.HistoricalRequestVM(Hammer.Data.last);
+  ko.applyBindings(lastReqVM, $('#last-request')[0]);
+
 
   ko.applyBindings(new Hammer.ClearHistoryVM, $('#clear-request-history')[0]);
     

@@ -1,7 +1,7 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  background-image: url('tiny_grid.png');
+  background-color: #efefef; 
   background-size: 26px 26px;
   margin: 0;
 }
@@ -69,28 +69,34 @@ section {
   margin-bottom: 10px;
 }
 
-#current-request-title {
-  font-size: 10px;
-  font-weight: bold;
-  padding-top: 5px;
-  text-align: center;
+.ui-left {
+  float: left;
+  width: 500px;
+  overflow: hidden;
+}
+
+.ui-right, #request-history .resp-info {
+  margin-left: 520px;
 }
 
 #current-request {
-  width: 500px;
-  overflow: hidden;
-  float: left;
   background-color: rgba(236, 236, 236, 0.8);
-  border: 0px solid rgba(114, 189, 53,0.4);
-  margin-top: 10px;
-  margin-left: 10px;
+  border: 0px solid rgba(114, 204, 40,0.7);
+
   border-top-width: 5px;
-  border-bottom-width: 5px;
   -webkit-transition: background-color 0.2s ease-in-out;                 
   -moz-transition: background-color 0.2s ease-in-out;                
   -o-transition: background-color 0.2s ease-in-out;  
   -ms-transition: background-color 0.2s ease-in-out;
   transition: background-color 0.2s ease-in-out;
+}
+
+#last-request {
+  margin-top: 10px;
+  display: block;
+  border-top: 5px solid rgba(114, 204, 40,0.7);;
+  overflow: hidden;
+  background-color: #fff;
 }
 
 #current-request form {
@@ -102,16 +108,48 @@ section {
   background-color: rgb(241, 255, 229);
 }
 
-#request-history {
-  float: left;
+#working-data, #historical-reqs {
+  border: 1px solid silver;
+  padding: 0 10px;
+  border-top: 0;
+  border-bottom: 0;
+  width: 100%;
+  position: relative;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+#last-request .body-cont {
+  display: none;
+}
+
+.CodeMirror {
+  height: 494px;
+}
+
+#request-history, #last-request {
   font-family: monospace;
-  margin: 0px 30px 0 10px;
+}
+
+#request-history {
+  clear: both;
   padding-top: 0;
+}
+
+#request-history-title {
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 4px;
+  text-align: center;
+  border-bottom: 1px solid silver;
+  border-left: 0;
+  border-right: 0;
 }
 
 #request-history .request {
   padding: 10px 10px;
-  border-top: 5px solid silver;
+  border-top: 5px solid rgba(114, 204, 40,0.7);
   margin-bottom: 10px;
 
   background-color: rgb(255,255,255);
@@ -197,7 +235,6 @@ textarea {
 
 .response-cont, .body-cont {
   position: relative;
-  clear: both;
 }
 
 textarea.body {
@@ -214,16 +251,28 @@ textarea.body {
   font-size: 12px;
 }
 
-.showResponse {
-  text-align: center;
-  background-color: #f5f5f5;
-  cursor: pointer;
-  font-weight: bold;
+.response-switches {
+  background-color: #f5f5f5;  
   border-bottom: 1px solid silver;
 }
 
+.showResponse {
+  display: inline;
+  text-align: center;
+  border-right: 1px solid silver;
+  padding: 2px 3px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #555;
+}
+
+.showResponse[data-selected=true] {
+  color: #fefefe;
+  background-color: #888;
+}
+
 .showResponse:hover {
-  color: gray;
+  text-decoration: underline;
 }
 
 .response-cont .response-label, .body-cont .body-label {
@@ -277,10 +326,8 @@ textarea.body {
 
 .req-meta {
   display: inline-block;
-  height: 13px;
-  display: inline-block;
+  padding-top: 3px;
   position: relative;
-  top: -3px;
 }
 
 .req-meta th, .req-meta td {
@@ -349,16 +396,25 @@ textarea.response, textarea.body {
   font-weight: bold
 }
 
-.run-again {
+.misc-tools {
   float: right;
+  min-width: 130px;
+  display: block;
+  text-align: right;
+  padding-top: 5px;
+  top: -5px;
+}
+
+.run-again, .save {
   cursor: pointer;
   margin-right: 10px;
   font-size: 18px;
   line-height: 25px;
-  top: -2px;
   position: relative;
-  min-width: 85px;
   text-align: right;
+}
+
+.run-again {
 }
 
 .run-again:after {
@@ -368,6 +424,11 @@ textarea.response, textarea.body {
 
 .run-again:hover:after {
   content: "un Again";
+  font-size:12px;
+}
+
+.save:hover:after {
+  content: "ave";
   font-size:12px;
 }
 
@@ -466,6 +527,7 @@ textarea {
 }
 
 .fmt-nodes-top {
+  margin-top: 5px;
   font-size: 12px;
 }
 
