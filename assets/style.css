@@ -92,6 +92,10 @@ section {
 }
 
 #last-request {
+  min-height: 544px;
+  background-image: url('axe.png');
+  background-repeat: no-repeat;
+  background-position:center; 
   margin-top: 10px;
   display: block;
   border-top: 5px solid rgba(114, 204, 40,0.7);;
@@ -257,7 +261,7 @@ textarea.body {
 }
 
 .showResponse {
-  display: inline;
+  float: left;
   text-align: center;
   border-right: 1px solid silver;
   padding: 2px 3px;
@@ -288,9 +292,13 @@ textarea.body {
   border: 1px solid;
   width: 100%;
   border-color: rgb(71, 36, 255);
-  max-height: 500px;
   overflow: auto;
   background-color: white;
+}
+
+.response-cont .fmt-nodes-top, .response-cont textarea {
+  max-height: 454px;
+  overflow: auto;
 }
 
 .response-cont.json {
@@ -363,6 +371,8 @@ textarea.body {
 .req-meta td.api {
   text-transform: uppercase;
   font-size: 10px;
+  padding: 2px;
+  min-width: 45px
 }
 
 .req-meta td.api[data-api=document] {
@@ -370,7 +380,7 @@ textarea.body {
 }
 
 .req-meta td.api[data-api=search] {
-  color: rgb(140, 182, 255)2;
+  color: rgb(140, 182, 255);
 }
 
 .req-meta td.server:hover {
@@ -407,33 +417,19 @@ textarea.response, textarea.body {
 
 .run-again, .save {
   cursor: pointer;
-  margin-right: 10px;
+  margin: 0 5px;
   font-size: 18px;
   line-height: 25px;
   position: relative;
   text-align: right;
 }
 
-.run-again {
-}
-
-.run-again:after {
-  content: '';
+.misc-tools .small {
   font-size:12px;
 }
 
-.run-again:hover:after {
-  content: "un Again";
-  font-size:12px;
-}
-
-.save:hover:after {
-  content: "ave";
-  font-size:12px;
-}
-
-.run-again:hover {
-  color: gray;
+.misc-tools span:hover {
+  color: #555;
 }
 
 [data-status-group="errored"]:before {
@@ -588,6 +584,10 @@ ul.yaml-map, .fmt-nodes ol.yaml-array {
 
 #request-history-header {
   background-color: #fff;
+}
+
+#request-history .save {
+  display: none;
 }
 
 #request-history-header h2 {

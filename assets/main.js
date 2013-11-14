@@ -262,6 +262,7 @@ Hammer.Request = Backbone.Model.extend({
     if (this.get('state') === 'errored' && !this.get('status')) return 'errored';
     if (!this.get('status') === null) return null;
     var s = this.get('status');
+    console.log("SG", s - (s % 100));
     return s - (s % 100);
   },
   exec: function () {
@@ -697,6 +698,7 @@ Hammer.HistoricalRequestVM = function (request) {
   }, this);
   
   this.statusGroup = ko.computed(function () {
+    console.log("SGINV", "OK", request.statusGroup());
     this.status.peek();
     this.state.peek();
     return request.statusGroup();
