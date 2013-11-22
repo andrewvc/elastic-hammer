@@ -496,7 +496,7 @@ Hammer.RequestBaseVM = function (request) {
       type = '';
     else
       type = ' ' + type.toUpperCase() + '';
-    return 'Execute ' + this.method() + type.toUpperCase() +' (⏎ or CTRL+⏎)';
+    return '▶ ' + type.toUpperCase() +' (⏎ or CTRL+⏎)';
   }, this);
 
   this.fetchIndexes = function (vm, e) {

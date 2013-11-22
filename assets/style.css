@@ -520,6 +520,18 @@ textarea {
 
 #submit-req {
   width: 100%;
+  cursor: pointer;
+  border-radius: 7px;
+  background: rgb(198, 198, 198);
+  border: none;
+}
+
+#submit-req:hover {
+  background: rgb(212, 212, 212);
+}
+
+#submit-req:active {
+  background: rgb(225, 225, 225);
 }
 
 .fmt-nodes-top {
