@@ -392,7 +392,7 @@ ko.bindingHandlers.codemirror = {
       {
         if(timeout) clearTimeout(timeout);
         timeout = setTimeout(function() {
-          CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch, {completeSingle: true});
+          CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch, {completeSingle: false});
         }, 150);
       }            
     });
