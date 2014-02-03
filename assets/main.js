@@ -167,6 +167,14 @@ Hammer.Request = Backbone.Model.extend({
   defaults: function () {
     var server;
     
+    if (window.location.href === "http://elastichammer.exploringelasticsearch.com") {
+      server = window.location.href;
+    } else if (window.location.href.match(/^file\:\/\//)) {
+      server = 'http://localhost:9200'; 
+    } else {
+      server = window.location.href;
+    }
+
     var pathComponents = _.compact(window.location.pathname.split('/'));
     if (pathComponents[pathComponents.length - 1] === 'elastic-hammer'
         && pathComponents[pathComponents.length - 2] === '_plugin') {
@@ -175,7 +183,7 @@ Hammer.Request = Backbone.Model.extend({
         server = server + '/' + (pathComponents.slice(0, pathComponents.length -2).join('/'));
       }
     } else {
-      server = 'http://localhost:9200';
+     
     };
     
     return {
