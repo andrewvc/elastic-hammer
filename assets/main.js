@@ -88,7 +88,7 @@ Hammer.Util.yamlRoots = {
 Hammer.Util.printYaml = function (obj) {
   if (_.isString(obj)) {
     var s = Hammer.Util.yamlRoots.string.clone();
-    
+
     if (! obj.match(Hammer.Util.urlPattern)) {
       s.text('"' + obj + '"');
       return s;
@@ -96,15 +96,15 @@ Hammer.Util.printYaml = function (obj) {
       var a = Hammer.Util.yamlRoots.anchor.clone();
 
       a.attr('href', obj);
-      
+
       if (obj.match(/\.(jpg|jpeg|png|gif|bmp)$/)) {
         img = Hammer.Util.yamlRoots.img.clone();
         img.attr('src', obj);
         a.html(img)
       } else {
-        a.text(obj);        
+        a.text(obj);
       }
-      
+
       return a;
     }
   } else if (_.isNumber(obj)) {
@@ -118,7 +118,7 @@ Hammer.Util.printYaml = function (obj) {
   } else if (_.isArray(obj)) {
     var arr = Hammer.Util.yamlRoots.arrRoot.clone();
     return arr.html(_.map(obj, function (v) {
-      var li = Hammer.Util.yamlRoots.arrElem.clone(); 
+      var li = Hammer.Util.yamlRoots.arrElem.clone();
       li.html(Hammer.Util.printYaml(v))
       return li;
     }));
@@ -166,11 +166,11 @@ Hammer.Indexes = Backbone.Collection.extend({
 Hammer.Request = Backbone.Model.extend({
   defaults: function () {
     var server;
-    
+
     if (window.location.href === "http://elastichammer.exploringelasticsearch.com") {
       server = window.location.href;
     } else if (window.location.href.match(/^file\:\/\//)) {
-      server = 'http://localhost:9200'; 
+      server = 'http://localhost:9200';
     } else {
       server = window.location.href;
     }
@@ -183,9 +183,9 @@ Hammer.Request = Backbone.Model.extend({
         server = server + '/' + (pathComponents.slice(0, pathComponents.length -2).join('/'));
       }
     } else {
-     
+
     };
-    
+
     return {
       started: null,
       ended: null,
@@ -199,7 +199,7 @@ Hammer.Request = Backbone.Model.extend({
       errors: ""
     };
   },
-  
+
   initialize: function () {
     // Changes when re-initialized with a new state
     // This helps keep codemirror in sync
@@ -260,7 +260,7 @@ Hammer.Request = Backbone.Model.extend({
 
     return null;
   },
-  
+
   reqUrl: function () {
     return this.get('server') + '/' + this.get('path');
   },
@@ -402,7 +402,7 @@ ko.bindingHandlers.codemirror = {
         timeout = setTimeout(function() {
           CodeMirror.showHint(cm, CodeMirror.hint.elasticsearch, {completeSingle: false});
         }, 150);
-      }            
+      }
     });
 
     editor.on('change', function(cm) {
@@ -432,7 +432,7 @@ ko.bindingHandlers.codemirror = {
         console.log("CHANGE", oldGeneration, newGeneration);
         element.editor.refresh();
         $e.data('generation', newGeneration);
-        element.editor.setValue(newBody);      
+        element.editor.setValue(newBody);
       }
     }
   }
@@ -459,7 +459,7 @@ Hammer.ClearHistoryVM = function () {
       // It will delete > 1 models, but stop at some point for reasons
       // I don't understand
       while (Hammer.Data.history.size() > 0) {
-        Hammer.Data.history.map(function (m,i) { 
+        Hammer.Data.history.map(function (m,i) {
           return m.destroy();
         });
       };
@@ -513,7 +513,7 @@ Hammer.RequestBaseVM = function (request) {
       type = ' ' + type.toUpperCase() + '';
     return '▶ ' + type.toUpperCase() +' (⏎ or CTRL+⏎)';
   }, this);
- 
+
   this.fetchIndexes = function (vm, e) {
     Hammer.Data.indexes.refresh(this.server());
   };
@@ -549,6 +549,11 @@ Hammer.CurrentRequestVM = function (request) {
       return false;
     }
     return true
+  };
+
+  this.format = function () {
+    var editor = $('#current-request-body')[0].editor;
+    editor.setValue(JSON.stringify(JSON.parse(editor.getValue()), null, "    "));
   };
 };
 
@@ -608,11 +613,11 @@ Hammer.HistoricalRequestVM = function (request) {
   this.contextMeta = ko.computed(function () {
     var api = request.api();
     if (! api || !request.ok()) return;
-    
+
     var response = this.response();
     var ths = [];
     var tds = [];
-    var kv = function(k,v) { 
+    var kv = function(k,v) {
       ths.push({th: k});
       tds.push({td: v});
     }
@@ -651,7 +656,7 @@ Hammer.HistoricalRequestVM = function (request) {
     }
   }, this);
 
-  var formatValue = function (value) {    
+  var formatValue = function (value) {
     var isString = typeof(value) === 'string'
     if (isString && value.match(urlPattern)) {
       // Cheesey HTML escape
@@ -663,7 +668,7 @@ Hammer.HistoricalRequestVM = function (request) {
       return value;
     }
   }
- 
+
   this.formattedResponse = ko.computed(function () {
     return Hammer.Util.printYaml(this.response()).html();
   }, this);
@@ -677,7 +682,7 @@ Hammer.HistoricalRequestVM = function (request) {
   this.prettyActivated = ko.computed(function () {
     return !this.formattableResponse() || this.prettyChosen();
   }, this);
-  
+
   this.jsonChosen = ko.observable(false);
   this.jsonActivated = ko.computed(function () {
     return !this.formattableResponse() || this.jsonChosen();
@@ -711,7 +716,7 @@ Hammer.HistoricalRequestVM = function (request) {
     var resp = this.response();
     return (!!(resp && resp._shards && resp._shards.failures)).toString();
   }, this);
-  
+
   this.statusGroup = ko.computed(function () {
     console.log("SGINV", "OK", request.statusGroup());
     this.status.peek();
@@ -740,14 +745,12 @@ $(function () {
   var lastReqVM = new Hammer.HistoricalRequestVM(Hammer.Data.last);
   ko.applyBindings(lastReqVM, $('#last-request')[0]);
 
-
   ko.applyBindings(new Hammer.ClearHistoryVM, $('#clear-request-history')[0]);
-  ko.applyBindings(new Hammer.FormatRequest, $('#format-req')[0]);
-    
+
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);
   ko.applyBindings(histReqsVM, $('#historical-reqs')[0]);
-  
+
   // Datalist for indexes
   var indexesDLVM = new Hammer.IndexesVM(Hammer.Data.indexes);
   ko.applyBindings(indexesDLVM, $('#pathauto')[0]);

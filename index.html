@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html>
 
   <head>
@@ -29,32 +29,31 @@
     <script type='text/javascript' src='assets/codemirror-addons/lint/json-lint.js'></script>
 
     <script type='text/javascript' src='assets/main.js'></script>
-    
+
     <script type='text/javascript'>
       window.onbeforeunload = function(e) {
       return "Leaving will lose the current state. Request history is always saved.";
       };
     </script>
-    
+
   </head>
   <body>
     <header>
       <span class='hammerpick'>&#9874;</span><h1>elastic hammer</h1>
       <div class="links">
-        [ 
+        [
         <span id="clear-request-history" data-bind="event: {click: clear}">Clear Hist.</span> |
-        <span id="format-req" data-bind="event: {click: format}">Format Req.</span> |
-        <a href="http://exploringelasticsearch.com">book</a> |       
+        <a href="http://exploringelasticsearch.com">book</a> |
         <a href="https://github.com/andrewvc/elastic-hammer">github</a>
         ]
       </div>
     </header>
-    
+
     <datalist id="pathauto" data-bind="foreach: indexes">
       <option data-bind="text: index"></option>
     </datalist>
-    
-    <section id="working-data">      
+
+    <section id="working-data">
       <section id="current-request" class="request-form ui-left">
         <form data-bind="submit: exec, event: {keypress: checkCtrlEnter}">
           <input type='submit' data-bind="value: apiSubmit" id="submit-req" value='▶ Submit (&#9166; or CTRL+&#9166;)' />
@@ -70,11 +69,14 @@
             /
             <input id='path' placeholder='path' name='path' type='text' data-bind="value: path, event: {focus: fetchIndexes, keyup: updatePath, paste: updatePath}" list="pathauto" />
           </div>
-          
+
           <div class="body-cont" data-bind="if: bodyCapable">
             <div class="errors" data-bind="text: errors"></div>
             <textarea id="current-request-body" name='body' class="body" data-bind="value: body, codemirror: { 'lineNumbers': true, 'matchBrackets': true, 'mode': 'text/typescript', json: true, lint: CodeMirror.lint.json, gutters: ['CodeMirror-lint-markers', 'CodeMirror-foldgutter']}"></textarea>
-
+            <br />
+            <small>
+              <a href="#" id="format-req" data-bind="event: {click: format}">&raquo; Reformat Request</a>
+            </small>
           </div>
         </form>
       </section>
@@ -88,7 +90,7 @@
 
         <!-- /ko -->
       </section>
-      
+
       <div style="clear: both"></div>
     </section>
 
@@ -110,7 +112,7 @@
     <div class="resp-info">
       <div class="method-path" data-bind="attr: {'data-status-group': statusGroup}">
         <span class="method" data-bind="text: method"></span>
-        <span class="url" data-bind="text: slashPath"></span> 
+        <span class="url" data-bind="text: slashPath"></span>
         <div>
           <table class="req-meta">
             <thead>
@@ -137,7 +139,7 @@
           </span>
         </div>
       </div>
-        
+
 
 
       <!-- ko if: contextMeta -->
@@ -154,23 +156,23 @@
         </tbody>
       </table>
       <!-- /ko -->
-      
+
       <div class='response-cont' data-bind="attr: {'data-status-group': statusGroup, 'data-shard-failure': shardFailure}, if: response">
         <!-- ko if: formattableResponse -->
         <div class="response-switches">
-      
+
           <div class='showResponse' data-bind="event: {click: togglePretty}, attr: {'data-selected': prettyChosen}">Pretty Response</div>
           <div class='showResponse' data-bind="event: {click: toggleJson}, attr: {'data-selected': jsonChosen}">JSON Response</div>
           <div style="clear: both"></div>
         </div>
         <!-- /ko -->
 
-        <!-- ko if: formattableResponse -->        
+        <!-- ko if: formattableResponse -->
         <!-- ko if: prettyActivated -->
         <div class='fmt-nodes fmt-nodes-top' data-bind="html: formattedResponse, event: {click: toggleExpansion}"></div>
         <!-- /ko -->
         <!-- /ko -->
-        
+
         <!-- ko if: jsonActivated -->
         <textarea readonly='readonly' class="response" data-bind="text: responseFmt, autoTextArea: responseFmt" ></textarea>
         <!-- /ko -->
