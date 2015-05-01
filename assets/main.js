@@ -467,6 +467,13 @@ Hammer.ClearHistoryVM = function () {
   };
 }
 
+Hammer.FormatRequest = function () {
+  this.format = function () {
+	var editor = $('#current-request-body')[0].editor;
+	editor.setValue(JSON.stringify(JSON.parse(editor.getValue()), null, "    "));
+  };
+}
+
 Hammer.RequestBaseVM = function (request) {
   _.extend(this, kb.viewModel(request));
   this.exec = function (self) {
@@ -506,7 +513,7 @@ Hammer.RequestBaseVM = function (request) {
       type = ' ' + type.toUpperCase() + '';
     return '▶ ' + type.toUpperCase() +' (⏎ or CTRL+⏎)';
   }, this);
-
+ 
   this.fetchIndexes = function (vm, e) {
     Hammer.Data.indexes.refresh(this.server());
   };
@@ -735,6 +742,7 @@ $(function () {
 
 
   ko.applyBindings(new Hammer.ClearHistoryVM, $('#clear-request-history')[0]);
+  ko.applyBindings(new Hammer.FormatRequest, $('#format-req')[0]);
     
   // The list of past requests
   var histReqsVM = new Hammer.HistoricalRequestsVM(Hammer.Data.history);
