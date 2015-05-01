@@ -1,7 +1,9 @@
 # Elastic-Hammer
 ## Elastic-search Front-End
 
-A web front-end for elasticsearch. Runs directly in the browser using localstorage, and needs no installation. To use, visit: [http://elastichammer.exploringelasticsearch.com/](http://elastichammer.exploringelasticsearch.com/).
+A web front-end for elasticsearch. Runs directly in the browser using localstorage. To use, install it as a plugin
+
+`./plugin -install andrewvc/elastic-hammer`
 
 ### Features
 
